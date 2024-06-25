@@ -62,7 +62,7 @@ type Client struct {
 	keySecret []byte
 }
 
-func (c *Client) createJWT() (token string, err error) {
+func (c *Client) createJWT() string {
 	timestamp := time.Now().UnixMilli()
 	exp := timestamp + time.Hour.Milliseconds()*24*7
 
@@ -76,17 +76,16 @@ func (c *Client) createJWT() (token string, err error) {
 		"sign_type": "SIGN",
 	}
 
-	return t.SignedString(c.keySecret)
+	token, err := t.SignedString(c.keySecret)
+	if err != nil {
+		panic(err)
+	}
+	return token
 }
 
 // R creates a new resty request with the jwt token and context
-func (c *Client) R(ctx context.Context) (req *resty.Request, err error) {
-	var token string
-	if token, err = c.createJWT(); err != nil {
-		return
-	}
-	req = c.client.R().SetContext(ctx).SetHeader("Authorization", token)
-	return
+func (c *Client) R(ctx context.Context) *resty.Request {
+	return c.client.R().SetContext(ctx).SetHeader("Authorization", c.createJWT())
 }
 
 // NewClient creates a new client
