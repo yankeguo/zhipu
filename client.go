@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -14,6 +15,7 @@ import (
 const (
 	envAPIKey  = "ZHIPUAI_API_KEY"
 	envBaseURL = "ZHIPUAI_BASE_URL"
+	envDebug   = "ZHIPUAI_DEBUG"
 
 	defaultBaseURL = "https://open.bigmodel.cn/api/paas/v4"
 )
@@ -28,7 +30,7 @@ var (
 type clientOptions struct {
 	baseURL string
 	apiKey  string
-	debug   bool
+	debug   *bool
 }
 
 // ClientOption is a function that configures the client
@@ -49,9 +51,10 @@ func WithBaseURL(baseURL string) ClientOption {
 }
 
 // WithDebug set the debug mode of the client
-func WithDebug() ClientOption {
+func WithDebug(debug bool) ClientOption {
 	return func(opts *clientOptions) {
-		opts.debug = true
+		opts.debug = new(bool)
+		*opts.debug = debug
 	}
 }
 
@@ -96,12 +99,14 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	for _, optFn := range optFns {
 		optFn(&opts)
 	}
+	// base url
 	if opts.baseURL == "" {
 		opts.baseURL = strings.TrimSpace(os.Getenv(envBaseURL))
 	}
 	if opts.baseURL == "" {
 		opts.baseURL = defaultBaseURL
 	}
+	// api key
 	if opts.apiKey == "" {
 		opts.apiKey = strings.TrimSpace(os.Getenv(envAPIKey))
 	}
@@ -109,15 +114,30 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 		err = ErrAPIKeyMissing
 		return
 	}
-	ks := strings.SplitN(opts.apiKey, ".", 2)
-	if len(ks) != 2 {
+	// debug
+	if opts.debug == nil {
+		if debugStr := strings.TrimSpace(os.Getenv(envDebug)); debugStr != "" {
+			if debug, err1 := strconv.ParseBool(debugStr); err1 == nil {
+				opts.debug = &debug
+			}
+		}
+	}
+
+	keyComponents := strings.SplitN(opts.apiKey, ".", 2)
+
+	if len(keyComponents) != 2 {
 		err = ErrAPIKeyMalformed
 		return
 	}
+
 	client = &Client{
 		client:    resty.New().SetBaseURL(opts.baseURL),
-		keyID:     ks[0],
-		keySecret: []byte(ks[1]),
+		keyID:     keyComponents[0],
+		keySecret: []byte(keyComponents[1]),
+	}
+
+	if opts.debug != nil {
+		client.client.SetDebug(*opts.debug)
 	}
 	return
 }
