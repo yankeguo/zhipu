@@ -1,9 +1,12 @@
 package zhipu
 
 import (
+	"bufio"
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -107,7 +110,103 @@ type ChatCompletionResponse struct {
 }
 
 // ChatCompletionStreamHandler is the handler for chat completion stream
-type ChatCompletionStreamHandler func(chunk *ChatCompletionResponse) error
+type ChatCompletionStreamHandler func(chunk ChatCompletionResponse) error
+
+var (
+	chatCompletionStreamPrefix = []byte("data:")
+	chatCompletionStreamDone   = []byte("[DONE]")
+)
+
+// chatCompletionReduceResponse reduce the chunk to the response
+func chatCompletionReduceResponse(out *ChatCompletionResponse, chunk ChatCompletionResponse) {
+	if len(out.Choices) == 0 {
+		out.Choices = append(out.Choices, ChatCompletionChoice{})
+	}
+
+	// basic
+	out.ID = chunk.ID
+	out.Created = chunk.Created
+	out.Model = chunk.Model
+
+	// choices
+	if len(chunk.Choices) != 0 {
+		oc := &out.Choices[0]
+		cc := chunk.Choices[0]
+
+		oc.Index = cc.Index
+		if cc.Delta.Role != "" {
+			oc.Message.Role = cc.Delta.Role
+		}
+		oc.Message.Content += cc.Delta.Content
+		oc.Message.ToolCalls = append(oc.Message.ToolCalls, cc.Delta.ToolCalls...)
+		if cc.Delta.ToolCallID != "" {
+			oc.Message.ToolCallID = cc.Delta.ToolCallID
+		}
+		if cc.FinishReason != "" {
+			oc.FinishReason = cc.FinishReason
+		}
+	}
+
+	// usage
+	if chunk.Usage.CompletionTokens != 0 {
+		out.Usage.CompletionTokens = chunk.Usage.CompletionTokens
+	}
+	if chunk.Usage.PromptTokens != 0 {
+		out.Usage.PromptTokens = chunk.Usage.PromptTokens
+	}
+	if chunk.Usage.TotalTokens != 0 {
+		out.Usage.TotalTokens = chunk.Usage.TotalTokens
+	}
+
+	// web search
+	out.WebSearch = append(out.WebSearch, chunk.WebSearch...)
+}
+
+// chatCompletionDecodeStream decode the sse stream of chat completion
+func chatCompletionDecodeStream(r io.Reader, fn func(chunk ChatCompletionResponse) error) (err error) {
+	br := bufio.NewReader(r)
+
+	for {
+		var line []byte
+
+		if line, err = br.ReadBytes('\n'); err != nil {
+			if errors.Is(err, io.EOF) {
+				err = nil
+			}
+			break
+		}
+
+		line = bytes.TrimSpace(line)
+
+		if len(line) == 0 {
+			continue
+		}
+
+		if !bytes.HasPrefix(line, chatCompletionStreamPrefix) {
+			continue
+		}
+
+		data := bytes.TrimSpace(line[len(chatCompletionStreamPrefix):])
+
+		if bytes.Equal(data, chatCompletionStreamDone) {
+			break
+		}
+
+		if len(data) == 0 {
+			continue
+		}
+
+		var chunk ChatCompletionResponse
+		if err = json.Unmarshal(data, &chunk); err != nil {
+			return
+		}
+		if err = fn(chunk); err != nil {
+			return
+		}
+	}
+
+	return
+}
 
 // ChatCompletionStreamService is the service for chat completion stream
 type ChatCompletionService struct {
@@ -262,7 +361,9 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 		body["user_id"] = *s.userID
 	}
 
-	if s.streamHandler == nil {
+	streamHandler := s.streamHandler
+
+	if streamHandler == nil {
 		var (
 			resp     *resty.Response
 			apiError APIError
@@ -277,10 +378,34 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 		return
 	}
 
+	// stream mode
+
 	body["stream"] = true
 
-	//TODO: handle the stream mode
-	err = errors.New("stream mode is not implemented yet")
+	var resp *resty.Response
+
+	if resp, err = s.client.R(ctx).SetBody(body).SetDoNotParseResponse(true).Post("chat/completions"); err != nil {
+		return
+	}
+	defer resp.RawBody().Close()
+
+	if resp.IsError() {
+		err = errors.New(resp.Status())
+		return
+	}
+
+	var choice ChatCompletionChoice
+
+	if err = chatCompletionDecodeStream(resp.RawBody(), func(chunk ChatCompletionResponse) error {
+		// reduce the chunk to the response
+		chatCompletionReduceResponse(&res, chunk)
+		// invoke the stream handler
+		return streamHandler(chunk)
+	}); err != nil {
+		return
+	}
+
+	res.Choices = append(res.Choices, choice)
 
 	return
 }

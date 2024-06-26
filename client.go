@@ -61,6 +61,7 @@ func WithDebug(debug bool) ClientOption {
 // Client is the client for zhipu ai platform
 type Client struct {
 	client    *resty.Client
+	debug     bool
 	keyID     string
 	keySecret []byte
 }
@@ -138,6 +139,7 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 
 	if opts.debug != nil {
 		client.client.SetDebug(*opts.debug)
+		client.debug = *opts.debug
 	}
 	return
 }
