@@ -2,6 +2,15 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.0.4 - 2024-06-26
+#### Bug Fixes
+- remove Client.R(), hide resty for future removal - (dc2a4ca) - GUO YANKE
+#### Features
+- add meta support for charglm - (fdd20e7) - GUO YANKE
+- add client option to custom http client - (c62d6a9) - GUO YANKE
+
+- - -
+
 ## v0.0.3 - 2024-06-26
 #### Features
 - add image generation service - (9f3f54f) - GUO YANKE
