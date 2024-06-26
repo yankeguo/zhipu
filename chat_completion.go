@@ -12,6 +12,11 @@ import (
 )
 
 const (
+	RoleSystem    = "system"
+	RoleUser      = "user"
+	RoleAssistant = "assistant"
+	RoleTool      = "tool"
+
 	ToolChoiceAuto = "auto"
 
 	FinishReasonStop         = "stop"
