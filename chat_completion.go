@@ -113,12 +113,21 @@ type ChatCompletionMultiContent struct {
 	ImageURL *ImageURL `json:"image_url,omitempty"`
 }
 
+// ChatCompletionMultiMessage is the multi message for chat completion
 type ChatCompletionMultiMessage struct {
 	Role    string                       `json:"role"`
 	Content []ChatCompletionMultiContent `json:"content"`
 }
 
 func (ChatCompletionMultiMessage) isChatCompletionMessageType() {}
+
+// ChatCompletionMeta is the meta for chat completion
+type ChatCompletionMeta struct {
+	UserInfo string `json:"user_info"`
+	BotInfo  string `json:"bot_info"`
+	UserName string `json:"user_name"`
+	BotName  string `json:"bot_name"`
+}
 
 // ChatCompletionChoice is the choice for chat completion
 type ChatCompletionChoice struct {
@@ -247,6 +256,7 @@ type ChatCompletionService struct {
 	stop        []string
 	toolChoice  *string
 	userID      *string
+	meta        *ChatCompletionMeta
 
 	messages []any
 	tools    []any
@@ -265,6 +275,12 @@ func (c *Client) ChatCompletionService(model string) *ChatCompletionService {
 // SetModel set the model of the chat completion
 func (s *ChatCompletionService) SetModel(model string) *ChatCompletionService {
 	s.model = model
+	return s
+}
+
+// SetMeta set the meta of the chat completion, optional
+func (s *ChatCompletionService) SetMeta(meta ChatCompletionMeta) *ChatCompletionService {
+	s.meta = &meta
 	return s
 }
 
@@ -387,6 +403,9 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 	}
 	if s.userID != nil {
 		body["user_id"] = *s.userID
+	}
+	if s.meta != nil {
+		body["meta"] = s.meta
 	}
 
 	streamHandler := s.streamHandler

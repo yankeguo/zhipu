@@ -24,6 +24,30 @@ func TestChatCompletionService(t *testing.T) {
 	require.NotEmpty(t, choice.Message.Content)
 }
 
+func TestChatCompletionServiceCharGLM(t *testing.T) {
+	client, err := NewClient()
+	require.NoError(t, err)
+
+	s := client.ChatCompletionService("charglm-3")
+	s.SetMeta(
+		ChatCompletionMeta{
+			UserName: "啵酱",
+			UserInfo: "啵酱是小少爷",
+			BotName:  "塞巴斯酱",
+			BotInfo:  "塞巴斯酱是一个冷酷的恶魔管家",
+		},
+	).AddMessage(ChatCompletionMessage{
+		Role:    RoleUser,
+		Content: "早上好",
+	})
+	res, err := s.Do(context.Background())
+	require.NoError(t, err)
+	require.NotEmpty(t, res.Choices)
+	choice := res.Choices[0]
+	require.Equal(t, FinishReasonStop, choice.FinishReason)
+	require.NotEmpty(t, choice.Message.Content)
+}
+
 func TestChatCompletionServiceStream(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
