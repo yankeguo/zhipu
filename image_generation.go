@@ -59,7 +59,7 @@ func (s *ImageGenerationService) Do(ctx context.Context) (res ImageGenerationRes
 		body["user_id"] = s.userID
 	}
 
-	if resp, err = s.client.R(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("images/generations"); err != nil {
+	if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("images/generations"); err != nil {
 		return
 	}
 

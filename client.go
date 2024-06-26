@@ -87,8 +87,8 @@ func (c *Client) createJWT() string {
 	return token
 }
 
-// R creates a new resty request with the jwt token and context
-func (c *Client) R(ctx context.Context) *resty.Request {
+// request creates a new resty request with the jwt token and context
+func (c *Client) request(ctx context.Context) *resty.Request {
 	return c.client.R().SetContext(ctx).SetHeader("Authorization", c.createJWT())
 }
 

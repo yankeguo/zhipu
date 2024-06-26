@@ -52,7 +52,7 @@ func (s *EmbeddingService) Do(ctx context.Context) (res EmbeddingResponse, err e
 		apiError APIError
 	)
 
-	if resp, err = s.client.R(ctx).SetBody(M{"model": s.model, "input": s.input}).
+	if resp, err = s.client.request(ctx).SetBody(M{"model": s.model, "input": s.input}).
 		SetResult(&res).
 		SetError(&apiError).
 		Post("embeddings"); err != nil {

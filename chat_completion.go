@@ -396,7 +396,7 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 			resp     *resty.Response
 			apiError APIError
 		)
-		if resp, err = s.client.R(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("chat/completions"); err != nil {
+		if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("chat/completions"); err != nil {
 			return
 		}
 		if resp.IsError() {
@@ -412,7 +412,7 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 
 	var resp *resty.Response
 
-	if resp, err = s.client.R(ctx).SetBody(body).SetDoNotParseResponse(true).Post("chat/completions"); err != nil {
+	if resp, err = s.client.request(ctx).SetBody(body).SetDoNotParseResponse(true).Post("chat/completions"); err != nil {
 		return
 	}
 	defer resp.RawBody().Close()
