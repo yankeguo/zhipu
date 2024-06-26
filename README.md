@@ -17,9 +17,9 @@ go get -u github.com/yankeguo/zhipu
 
 ```go
 // this will use environment variables ZHIPUAI_API_KEY
-client := zhipu.NewClient()
+client, err := zhipu.NewClient()
 // or you can specify the API key
-client = zhipu.NewClient(zhipu.WithAPIKey("your api key"))
+client, err = zhipu.NewClient(zhipu.WithAPIKey("your api key"))
 ```
 
 ### Use the client
@@ -62,6 +62,20 @@ if err != nil {
     // this package will combine the stream chunks and build a final result mimicking the non-streaming API
     println(res.Choices[0].Message.Content)
 }
+```
+
+**Embedding**
+
+```go
+service := client.EmbeddingService("embedding-v2").SetInput("你好呀")
+service.Do(context.Background())
+```
+
+**Image Generation**
+
+```go
+service := client.ImageGenerationService("cogview-3").SetPrompt("一只可爱的小猫咪")
+service.Do(context.Background())
 ```
 
 > [!NOTE]
