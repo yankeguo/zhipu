@@ -41,16 +41,16 @@ func (ChatCompletionToolFunction) isChatCompletionTool() {}
 // ChatCompletionToolRetrieval is the retrieval for chat completion
 type ChatCompletionToolRetrieval struct {
 	KnowledgeID    string `json:"knowledge_id"`
-	PromptTemplate string `json:"prompt_template"`
+	PromptTemplate string `json:"prompt_template,omitempty"`
 }
 
 func (ChatCompletionToolRetrieval) isChatCompletionTool() {}
 
 // ChatCompletionToolWebSearch is the web search for chat completion
 type ChatCompletionToolWebSearch struct {
-	Enable       bool   `json:"enable"`
-	SearchQuery  string `json:"search_query"`
-	SearchResult bool   `json:"search_result"`
+	Enable       *bool  `json:"enable,omitempty"`
+	SearchQuery  string `json:"search_query,omitempty"`
+	SearchResult bool   `json:"search_result,omitempty"`
 }
 
 func (ChatCompletionToolWebSearch) isChatCompletionTool() {}
@@ -71,14 +71,17 @@ type ChatCompletionWebSearch struct {
 	Content string `json:"content"`
 }
 
+// ChatCompletionToolCallFunction is the function for chat completion tool call
+type ChatCompletionToolCallFunction struct {
+	Name      string          `json:"name"`
+	Arguments json.RawMessage `json:"arguments"`
+}
+
 // ChatCompletionToolCall is the tool call for chat completion
 type ChatCompletionToolCall struct {
-	ID       string `json:"id"`
-	Type     string `json:"type"`
-	Function struct {
-		Name      string          `json:"name"`
-		Arguments json.RawMessage `json:"arguments"`
-	} `json:"function"`
+	ID       string                          `json:"id"`
+	Type     string                          `json:"type"`
+	Function *ChatCompletionToolCallFunction `json:"function,omitempty"`
 }
 
 // ChatCompletionMessage is the message for chat completion
