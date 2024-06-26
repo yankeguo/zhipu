@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.0.2 - 2024-06-26
+#### Bug Fixes
+- **(deps)** update golang-jwt/jwt to v5 - (2f76a57) - GUO YANKE
+#### Features
+- add constants for roles - (3d08a72) - GUO YANKE
+
+- - -
+
 ## v0.0.1 - 2024-06-26
 #### Bug Fixes
 - add json tag "omitempty" to various types - (bf81097) - GUO YANKE
