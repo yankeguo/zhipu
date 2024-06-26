@@ -28,8 +28,12 @@ const (
 	ToolTypeFunction  = "function"
 	ToolTypeWebSearch = "web_search"
 	ToolTypeRetrieval = "retrieval"
+
+	MultiContentTypeText     = "text"
+	MultiContentTypeImageURL = "image_url"
 )
 
+// ChatCompletionTool is the interface for chat completion tool
 type ChatCompletionTool interface {
 	isChatCompletionTool()
 }
@@ -89,6 +93,10 @@ type ChatCompletionToolCall struct {
 	Function *ChatCompletionToolCallFunction `json:"function,omitempty"`
 }
 
+type ChatCompletionMessageType interface {
+	isChatCompletionMessageType()
+}
+
 // ChatCompletionMessage is the message for chat completion
 type ChatCompletionMessage struct {
 	Role       string                   `json:"role"`
@@ -97,14 +105,27 @@ type ChatCompletionMessage struct {
 	ToolCallID string                   `json:"tool_call_id,omitempty"`
 }
 
+func (ChatCompletionMessage) isChatCompletionMessageType() {}
+
+type ChatCompletionMultiContent struct {
+	Type     string    `json:"type"`
+	Text     string    `json:"text"`
+	ImageURL *ImageURL `json:"image_url,omitempty"`
+}
+
+type ChatCompletionMultiMessage struct {
+	Role    string                       `json:"role"`
+	Content []ChatCompletionMultiContent `json:"content"`
+}
+
+func (ChatCompletionMultiMessage) isChatCompletionMessageType() {}
+
 // ChatCompletionChoice is the choice for chat completion
 type ChatCompletionChoice struct {
-	Index        int    `json:"index"`
-	FinishReason string `json:"finish_reason"`
-	// delta is only available in stream mode
-	Delta ChatCompletionMessage `json:"delta"`
-	// message is only available in non-stream mode
-	Message ChatCompletionMessage `json:"message"`
+	Index        int                   `json:"index"`
+	FinishReason string                `json:"finish_reason"`
+	Delta        ChatCompletionMessage `json:"delta"`   // stream mode
+	Message      ChatCompletionMessage `json:"message"` // non-stream mode
 }
 
 // ChatCompletionResponse is the response for chat completion
@@ -147,9 +168,6 @@ func chatCompletionReduceResponse(out *ChatCompletionResponse, chunk ChatComplet
 		}
 		oc.Message.Content += cc.Delta.Content
 		oc.Message.ToolCalls = append(oc.Message.ToolCalls, cc.Delta.ToolCalls...)
-		if cc.Delta.ToolCallID != "" {
-			oc.Message.ToolCallID = cc.Delta.ToolCallID
-		}
 		if cc.FinishReason != "" {
 			oc.FinishReason = cc.FinishReason
 		}
@@ -230,7 +248,7 @@ type ChatCompletionService struct {
 	toolChoice  *string
 	userID      *string
 
-	messages []ChatCompletionMessage
+	messages []any
 	tools    []any
 
 	streamHandler ChatCompletionStreamHandler
@@ -306,8 +324,10 @@ func (s *ChatCompletionService) SetStreamHandler(handler ChatCompletionStreamHan
 }
 
 // AddMessage add the message to the chat completion
-func (s *ChatCompletionService) AddMessage(messages ...ChatCompletionMessage) *ChatCompletionService {
-	s.messages = append(s.messages, messages...)
+func (s *ChatCompletionService) AddMessage(messages ...ChatCompletionMessageType) *ChatCompletionService {
+	for _, message := range messages {
+		s.messages = append(s.messages, message)
+	}
 	return s
 }
 
