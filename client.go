@@ -3,6 +3,7 @@ package zhipu
 import (
 	"context"
 	"errors"
+	"net/http"
 	"os"
 	"strconv"
 	"strings"
@@ -30,6 +31,7 @@ var (
 type clientOptions struct {
 	baseURL string
 	apiKey  string
+	client  *http.Client
 	debug   *bool
 }
 
@@ -47,6 +49,13 @@ func WithAPIKey(apiKey string) ClientOption {
 func WithBaseURL(baseURL string) ClientOption {
 	return func(opts *clientOptions) {
 		opts.baseURL = baseURL
+	}
+}
+
+// WithHTTPClient set the http client of the client
+func WithHTTPClient(client *http.Client) ClientOption {
+	return func(opts *clientOptions) {
+		opts.client = client
 	}
 }
 
@@ -132,10 +141,17 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	}
 
 	client = &Client{
-		client:    resty.New().SetBaseURL(opts.baseURL),
 		keyID:     keyComponents[0],
 		keySecret: []byte(keyComponents[1]),
 	}
+
+	if opts.client == nil {
+		client.client = resty.New()
+	} else {
+		client.client = resty.NewWithClient(opts.client)
+	}
+
+	client.client = client.client.SetBaseURL(opts.baseURL)
 
 	if opts.debug != nil {
 		client.client.SetDebug(*opts.debug)
