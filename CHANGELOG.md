@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.0.3 - 2024-06-26
+#### Features
+- add image generation service - (9f3f54f) - GUO YANKE
+- add support for vision models - (2dcd82a) - GUO YANKE
+- add embedding service - (f57806a) - GUO YANKE
+
+- - -
+
 ## v0.0.2 - 2024-06-26
 #### Bug Fixes
 - **(deps)** update golang-jwt/jwt to v5 - (2f76a57) - GUO YANKE
