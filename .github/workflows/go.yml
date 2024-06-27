@@ -24,4 +24,5 @@ jobs:
     - name: Test
       run: go test -v ./...
       env:
-        ZHIPUAI_API_KEY: ${{ secrets.ZHIPUAI_API_KEY }}
+        ZHIPUAI_API_KEY: ${{secrets.ZHIPUAI_API_KEY}}
+        TEST_KNOWLEDGE_ID: ${{secrets.TEST_KNOWLEDGE_ID}}

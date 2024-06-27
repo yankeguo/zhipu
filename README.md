@@ -78,6 +78,24 @@ service := client.ImageGenerationService("cogview-3").SetPrompt("一只可爱的
 service.Do(context.Background())
 ```
 
+**Upload File (Retrieval)**
+
+```go
+service := client.FileCreateService(zhipu.FilePurposeRetrieval)
+service.SetLocalFile(filepath.Join("testdata", "test-file.txt"))
+service.SetKnowledgeID("your-knowledge-id")
+
+service.Do(context.Background())
+```
+
+**Upload File (Fine-Tune)**
+
+```go
+service := client.FileCreateService(zhipu.FilePurposeFineTune)
+service.SetLocalFile(filepath.Join("testdata", "test-file.jsonl"))
+service.Do(context.Background())
+```
+
 > [!NOTE]
 >
 > More APIs are coming soon.
