@@ -96,6 +96,16 @@ service.SetLocalFile(filepath.Join("testdata", "test-file.jsonl"))
 service.Do(context.Background())
 ```
 
+**Batch Create**
+
+```go
+service := client.BatchCreateService().
+  SetInputFileID("fileid").
+  SetCompletionWindow(zhipu.BatchCompletionWindow24h).
+  SetEndpoint(BatchEndpointV4ChatCompletions)
+service.Do(context.Background())
+```
+
 > [!NOTE]
 >
 > More APIs are coming soon.

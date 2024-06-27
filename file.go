@@ -2,6 +2,7 @@ package zhipu
 
 import (
 	"context"
+	"errors"
 	"io"
 	"os"
 	"path/filepath"
@@ -417,6 +418,61 @@ func (s *FileGetService) Do(ctx context.Context) (res FileGetResponse, err error
 		err = apiError
 		return
 	}
+
+	return
+}
+
+type FileDownloadService struct {
+	client *Client
+
+	fileID string
+
+	writer   io.Writer
+	filename string
+}
+
+func (c *Client) FileDownloadService(fileID string) *FileDownloadService {
+	return &FileDownloadService{client: c, fileID: fileID}
+}
+
+func (s *FileDownloadService) SetOutput(w io.Writer) *FileDownloadService {
+	s.writer = w
+	return s
+}
+
+func (s *FileDownloadService) SetOutputFile(filename string) *FileDownloadService {
+	s.filename = filename
+	return s
+}
+
+func (s *FileDownloadService) Do(ctx context.Context) (err error) {
+	var resp *resty.Response
+
+	writer := s.writer
+
+	if writer == nil && s.filename != "" {
+		var f *os.File
+		if f, err = os.Create(s.filename); err != nil {
+			return
+		}
+		defer f.Close()
+
+		writer = f
+	}
+
+	if writer == nil {
+		return errors.New("no output specified")
+	}
+
+	if resp, err = s.client.request(ctx).
+		SetDoNotParseResponse(true).
+		SetPathParam("file_id", s.fileID).
+		Get("files/{file_id}/content"); err != nil {
+		return
+	}
+	defer resp.RawBody().Close()
+
+	_, err = io.Copy(writer, resp.RawBody())
 
 	return
 }

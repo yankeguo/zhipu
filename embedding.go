@@ -43,7 +43,7 @@ func (s *EmbeddingService) BatchMethod() string {
 }
 
 func (s *EmbeddingService) BatchURL() string {
-	return "/v4/embeddings"
+	return BatchEndpointV4Embeddings
 }
 
 func (s *EmbeddingService) BatchBody() any {

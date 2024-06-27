@@ -35,7 +35,7 @@ func (s *ImageGenerationService) BatchMethod() string {
 }
 
 func (s *ImageGenerationService) BatchURL() string {
-	return "/v4/images/generations"
+	return BatchEndpointV4ImagesGenerations
 }
 
 func (s *ImageGenerationService) BatchBody() any {

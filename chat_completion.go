@@ -281,7 +281,7 @@ func (s *ChatCompletionService) BatchMethod() string {
 }
 
 func (s *ChatCompletionService) BatchURL() string {
-	return "/v4/chat/completions"
+	return BatchEndpointV4ChatCompletions
 }
 
 func (s *ChatCompletionService) BatchBody() any {
