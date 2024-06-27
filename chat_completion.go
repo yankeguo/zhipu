@@ -413,7 +413,7 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 	if streamHandler == nil {
 		var (
 			resp     *resty.Response
-			apiError APIError
+			apiError APIErrorResponse
 		)
 		if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("chat/completions"); err != nil {
 			return

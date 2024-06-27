@@ -49,7 +49,7 @@ func (s *EmbeddingService) SetInput(input string) *EmbeddingService {
 func (s *EmbeddingService) Do(ctx context.Context) (res EmbeddingResponse, err error) {
 	var (
 		resp     *resty.Response
-		apiError APIError
+		apiError APIErrorResponse
 	)
 
 	if resp, err = s.client.request(ctx).SetBody(M{"model": s.model, "input": s.input}).

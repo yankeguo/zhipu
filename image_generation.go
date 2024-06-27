@@ -47,7 +47,7 @@ func (s *ImageGenerationService) SetUserID(userID string) *ImageGenerationServic
 func (s *ImageGenerationService) Do(ctx context.Context) (res ImageGenerationResponse, err error) {
 	var (
 		resp     *resty.Response
-		apiError APIError
+		apiError APIErrorResponse
 	)
 
 	body := M{

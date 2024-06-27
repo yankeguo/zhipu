@@ -104,7 +104,7 @@ func (s *FileCreateService) SetKnowledgeID(knowledgeID string) *FileCreateServic
 func (s *FileCreateService) Do(ctx context.Context) (res FileCreateResponse, err error) {
 	var (
 		resp     *resty.Response
-		apiError APIError
+		apiError APIErrorResponse
 	)
 
 	m := map[string]string{"purpose": s.purpose}
