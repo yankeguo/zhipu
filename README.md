@@ -100,6 +100,25 @@ service.Do(context.Background())
 >
 > More APIs are coming soon.
 
+### Batch Support
+
+**Batch File Writer**
+
+```go
+f, err := os.OpenFile("batch.jsonl", os.O_CREATE|os.O_WRONLY, 0644)
+
+bw := zhipu.NewBatchFileWriter(f)
+
+bw.Add("action_1", client.ChatCompletionService("glm-4-flash").
+    AddMessage(zhipu.ChatCompletionMessage{
+        Role: "user",
+        Content: "你好",
+    }))
+
+bw.Add("action_2", client.EmbeddingService("embedding-v2").SetInput("你好呀"))
+
+bw.Add("action_3", client.ImageGenerationService("cogview-3").SetPrompt("一只可爱的小猫咪"))
+```
 ## Credits
 
 GUO YANKE, MIT License

@@ -14,6 +14,10 @@ type ImageGenerationService struct {
 	userID string
 }
 
+var (
+	_ BatchSupport = &ImageGenerationService{}
+)
+
 type ImageGenerationResponse struct {
 	Created int64      `json:"created"`
 	Data    []ImageURL `json:"data"`
@@ -24,6 +28,18 @@ func (c *Client) ImageGenerationService(model string) *ImageGenerationService {
 		client: c,
 		model:  model,
 	}
+}
+
+func (s *ImageGenerationService) BatchMethod() string {
+	return "POST"
+}
+
+func (s *ImageGenerationService) BatchURL() string {
+	return "/v4/images/generations"
+}
+
+func (s *ImageGenerationService) BatchBody() any {
+	return s.buildBody()
 }
 
 // SetModel sets the model parameter
@@ -44,12 +60,7 @@ func (s *ImageGenerationService) SetUserID(userID string) *ImageGenerationServic
 	return s
 }
 
-func (s *ImageGenerationService) Do(ctx context.Context) (res ImageGenerationResponse, err error) {
-	var (
-		resp     *resty.Response
-		apiError APIErrorResponse
-	)
-
+func (s *ImageGenerationService) buildBody() M {
 	body := M{
 		"model":  s.model,
 		"prompt": s.prompt,
@@ -58,6 +69,17 @@ func (s *ImageGenerationService) Do(ctx context.Context) (res ImageGenerationRes
 	if s.userID != "" {
 		body["user_id"] = s.userID
 	}
+
+	return body
+}
+
+func (s *ImageGenerationService) Do(ctx context.Context) (res ImageGenerationResponse, err error) {
+	var (
+		resp     *resty.Response
+		apiError APIErrorResponse
+	)
+
+	body := s.buildBody()
 
 	if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("images/generations"); err != nil {
 		return

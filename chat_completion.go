@@ -264,12 +264,28 @@ type ChatCompletionService struct {
 	streamHandler ChatCompletionStreamHandler
 }
 
+var (
+	_ BatchSupport = &ChatCompletionService{}
+)
+
 // ChatCompletionRequest is the request for chat completion
 func (c *Client) ChatCompletionService(model string) *ChatCompletionService {
 	return &ChatCompletionService{
 		client: c,
 		model:  model,
 	}
+}
+
+func (s *ChatCompletionService) BatchMethod() string {
+	return "POST"
+}
+
+func (s *ChatCompletionService) BatchURL() string {
+	return "/v4/chat/completions"
+}
+
+func (s *ChatCompletionService) BatchBody() any {
+	return s.buildBody()
 }
 
 // SetModel set the model of the chat completion
@@ -371,8 +387,7 @@ func (s *ChatCompletionService) AddTool(tools ...ChatCompletionTool) *ChatComple
 	return s
 }
 
-// Do send the request of the chat completion and return the response
-func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionResponse, err error) {
+func (s *ChatCompletionService) buildBody() M {
 	body := map[string]any{
 		"model":    s.model,
 		"messages": s.messages,
@@ -407,6 +422,12 @@ func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionRespo
 	if s.meta != nil {
 		body["meta"] = s.meta
 	}
+	return body
+}
+
+// Do send the request of the chat completion and return the response
+func (s *ChatCompletionService) Do(ctx context.Context) (res ChatCompletionResponse, err error) {
+	body := s.buildBody()
 
 	streamHandler := s.streamHandler
 

@@ -29,9 +29,25 @@ type EmbeddingService struct {
 	input string
 }
 
+var (
+	_ BatchSupport = &EmbeddingService{}
+)
+
 // EmbeddingService embeds a list of text into a vector space.
 func (c *Client) EmbeddingService(model string) *EmbeddingService {
 	return &EmbeddingService{client: c, model: model}
+}
+
+func (s *EmbeddingService) BatchMethod() string {
+	return "POST"
+}
+
+func (s *EmbeddingService) BatchURL() string {
+	return "/v4/embeddings"
+}
+
+func (s *EmbeddingService) BatchBody() any {
+	return s.buildBody()
 }
 
 // SetModel sets the model to use for the embedding.
@@ -46,13 +62,17 @@ func (s *EmbeddingService) SetInput(input string) *EmbeddingService {
 	return s
 }
 
+func (s *EmbeddingService) buildBody() M {
+	return M{"model": s.model, "input": s.input}
+}
+
 func (s *EmbeddingService) Do(ctx context.Context) (res EmbeddingResponse, err error) {
 	var (
 		resp     *resty.Response
 		apiError APIErrorResponse
 	)
 
-	if resp, err = s.client.request(ctx).SetBody(M{"model": s.model, "input": s.input}).
+	if resp, err = s.client.request(ctx).SetBody(s.buildBody()).
 		SetResult(&res).
 		SetError(&apiError).
 		Post("embeddings"); err != nil {
