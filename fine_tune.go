@@ -19,22 +19,16 @@ const (
 	FineTuneStatusCancelled       = "cancelled"
 )
 
-// FineTuneError is the error of the FineTuneItem
-type FineTuneError struct {
-	Code    string `json:"code"`
-	Message string `json:"message"`
-}
-
 // FineTuneItem is the item of the FineTune
 type FineTuneItem struct {
-	ID             string        `json:"id"`
-	RequestID      string        `json:"request_id"`
-	FineTunedModel string        `json:"fine_tuned_model"`
-	Status         string        `json:"status"`
-	Object         string        `json:"object"`
-	TrainingFile   string        `json:"training_file"`
-	ValidationFile string        `json:"validation_file"`
-	Error          FineTuneError `json:"error"`
+	ID             string   `json:"id"`
+	RequestID      string   `json:"request_id"`
+	FineTunedModel string   `json:"fine_tuned_model"`
+	Status         string   `json:"status"`
+	Object         string   `json:"object"`
+	TrainingFile   string   `json:"training_file"`
+	ValidationFile string   `json:"validation_file"`
+	Error          APIError `json:"error"`
 }
 
 // FineTuneCreateService creates a new fine tune
