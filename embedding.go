@@ -33,9 +33,9 @@ var (
 	_ BatchSupport = &EmbeddingService{}
 )
 
-// EmbeddingService embeds a list of text into a vector space.
-func (c *Client) EmbeddingService(model string) *EmbeddingService {
-	return &EmbeddingService{client: c, model: model}
+// NewEmbeddingService creates a new EmbeddingService.
+func NewEmbeddingService(client *Client) *EmbeddingService {
+	return &EmbeddingService{client: client}
 }
 
 func (s *EmbeddingService) BatchMethod() string {
@@ -72,7 +72,8 @@ func (s *EmbeddingService) Do(ctx context.Context) (res EmbeddingResponse, err e
 		apiError APIErrorResponse
 	)
 
-	if resp, err = s.client.request(ctx).SetBody(s.buildBody()).
+	if resp, err = s.client.request(ctx).
+		SetBody(s.buildBody()).
 		SetResult(&res).
 		SetError(&apiError).
 		Post("embeddings"); err != nil {

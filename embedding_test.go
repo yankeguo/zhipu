@@ -11,7 +11,7 @@ func TestEmbeddingService(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	service := client.EmbeddingService("embedding-2")
+	service := client.Embedding("embedding-2")
 
 	resp, err := service.SetInput("你好").Do(context.Background())
 	require.NoError(t, err)

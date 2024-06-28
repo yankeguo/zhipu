@@ -160,6 +160,11 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	return
 }
 
+// Embedding embeds a list of text into a vector space.
+func (c *Client) Embedding(model string) *EmbeddingService {
+	return NewEmbeddingService(c).SetModel(model)
+}
+
 // FileCreate creates a new FileCreateService.
 func (c *Client) FileCreate(purpose string) *FileCreateService {
 	return NewFileCreateService(c).SetPurpose(purpose)

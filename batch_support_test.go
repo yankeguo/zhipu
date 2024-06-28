@@ -19,7 +19,7 @@ func TestBatchFileWriter(t *testing.T) {
 		Role: "user", Content: "hello",
 	}))
 	require.NoError(t, err)
-	err = w.Write("batch-2", client.EmbeddingService("c").SetInput("whoa"))
+	err = w.Write("batch-2", client.Embedding("c").SetInput("whoa"))
 	require.NoError(t, err)
 	err = w.Write("batch-3", client.ImageGeneration("d").SetPrompt("whoa"))
 	require.NoError(t, err)
