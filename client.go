@@ -160,6 +160,36 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	return
 }
 
+// FineTuneCreate creates a new fine tune create service
+func (c *Client) FineTuneCreate(model string) *FineTuneCreateService {
+	return NewFineTuneCreateService(c).SetModel(model)
+}
+
+// FineTuneEventList creates a new fine tune event list service
+func (c *Client) FineTuneEventList(jobID string) *FineTuneEventListService {
+	return NewFineTuneEventListService(c).SetJobID(jobID)
+}
+
+// FineTuneGet creates a new fine tune get service
+func (c *Client) FineTuneGet(jobID string) *FineTuneGetService {
+	return NewFineTuneGetService(c).SetJobID(jobID)
+}
+
+// FineTuneList creates a new fine tune list service
+func (c *Client) FineTuneList() *FineTuneListService {
+	return NewFineTuneListService(c)
+}
+
+// FineTuneDelete creates a new fine tune delete service
+func (c *Client) FineTuneDelete(jobID string) *FineTuneDeleteService {
+	return NewFineTuneDeleteService(c).SetJobID(jobID)
+}
+
+// FineTuneCancel creates a new fine tune cancel service
+func (c *Client) FineTuneCancel(jobID string) *FineTuneCancelService {
+	return NewFineTuneCancelService(c).SetJobID(jobID)
+}
+
 // ImageGeneration creates a new image generation service
 func (c *Client) ImageGeneration(model string) *ImageGenerationService {
 	return NewImageGenerationService(c).SetModel(model)

@@ -19,11 +19,13 @@ const (
 	FineTuneStatusCancelled       = "cancelled"
 )
 
+// FineTuneError is the error of the FineTuneItem
 type FineTuneError struct {
 	Code    string `json:"code"`
 	Message string `json:"message"`
 }
 
+// FineTuneItem is the item of the FineTune
 type FineTuneItem struct {
 	ID             string        `json:"id"`
 	RequestID      string        `json:"request_id"`
@@ -35,6 +37,7 @@ type FineTuneItem struct {
 	Error          FineTuneError `json:"error"`
 }
 
+// FineTuneCreateService creates a new fine tune
 type FineTuneCreateService struct {
 	client *Client
 
@@ -50,76 +53,89 @@ type FineTuneCreateService struct {
 	requestID *string
 }
 
+// FineTuneCreateResponse is the response of the FineTuneCreateService
 type FineTuneCreateResponse = FineTuneItem
 
-func (c *Client) FineTuneCreateService(model string) *FineTuneCreateService {
+// NewFineTuneCreateService creates a new FineTuneCreateService
+func NewFineTuneCreateService(client *Client) *FineTuneCreateService {
 	return &FineTuneCreateService{
-		client: c,
-		model:  model,
+		client: client,
 	}
 }
 
+// SetModel sets the model parameter
 func (s *FineTuneCreateService) SetModel(model string) *FineTuneCreateService {
 	s.model = model
 	return s
 }
 
+// SetTrainingFile sets the trainingFile parameter
 func (s *FineTuneCreateService) SetTrainingFile(trainingFile string) *FineTuneCreateService {
 	s.trainingFile = trainingFile
 	return s
 }
 
+// SetValidationFile sets the validationFile parameter
 func (s *FineTuneCreateService) SetValidationFile(validationFile string) *FineTuneCreateService {
 	s.validationFile = &validationFile
 	return s
 }
 
+// SetLearningRateMultiplier sets the learningRateMultiplier parameter
 func (s *FineTuneCreateService) SetLearningRateMultiplier(learningRateMultiplier float64) *FineTuneCreateService {
 	s.learningRateMultiplier = &StringOr[float64]{}
 	s.learningRateMultiplier.SetValue(learningRateMultiplier)
 	return s
 }
 
+// SetLearningRateMultiplierAuto sets the learningRateMultiplier parameter to auto
 func (s *FineTuneCreateService) SetLearningRateMultiplierAuto() *FineTuneCreateService {
 	s.learningRateMultiplier = &StringOr[float64]{}
 	s.learningRateMultiplier.SetString(HyperParameterAuto)
 	return s
 }
 
+// SetBatchSize sets the batchSize parameter
 func (s *FineTuneCreateService) SetBatchSize(batchSize int) *FineTuneCreateService {
 	s.batchSize = &StringOr[int]{}
 	s.batchSize.SetValue(batchSize)
 	return s
 }
 
+// SetBatchSizeAuto sets the batchSize parameter to auto
 func (s *FineTuneCreateService) SetBatchSizeAuto() *FineTuneCreateService {
 	s.batchSize = &StringOr[int]{}
 	s.batchSize.SetString(HyperParameterAuto)
 	return s
 }
 
+// SetNEpochs sets the nEpochs parameter
 func (s *FineTuneCreateService) SetNEpochs(nEpochs int) *FineTuneCreateService {
 	s.nEpochs = &StringOr[int]{}
 	s.nEpochs.SetValue(nEpochs)
 	return s
 }
 
+// SetNEpochsAuto sets the nEpochs parameter to auto
 func (s *FineTuneCreateService) SetNEpochsAuto() *FineTuneCreateService {
 	s.nEpochs = &StringOr[int]{}
 	s.nEpochs.SetString(HyperParameterAuto)
 	return s
 }
 
+// SetSuffix sets the suffix parameter
 func (s *FineTuneCreateService) SetSuffix(suffix string) *FineTuneCreateService {
 	s.suffix = &suffix
 	return s
 }
 
+// SetRequestID sets the requestID parameter
 func (s *FineTuneCreateService) SetRequestID(requestID string) *FineTuneCreateService {
 	s.requestID = &requestID
 	return s
 }
 
+// Do makes the request
 func (s *FineTuneCreateService) Do(ctx context.Context) (res FineTuneCreateResponse, err error) {
 	var (
 		resp     *resty.Response
@@ -154,7 +170,11 @@ func (s *FineTuneCreateService) Do(ctx context.Context) (res FineTuneCreateRespo
 		body["hyperparameters"] = hp
 	}
 
-	if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("fine_tuning/jobs"); err != nil {
+	if resp, err = s.client.request(ctx).
+		SetBody(body).
+		SetResult(&res).
+		SetError(&apiError).
+		Post("fine_tuning/jobs"); err != nil {
 		return
 	}
 	if resp.IsError() {
@@ -164,6 +184,7 @@ func (s *FineTuneCreateService) Do(ctx context.Context) (res FineTuneCreateRespo
 	return
 }
 
+// FineTuneEventListService creates a new fine tune event list
 type FineTuneEventListService struct {
 	client *Client
 
@@ -173,6 +194,7 @@ type FineTuneEventListService struct {
 	after *string
 }
 
+// FineTuneEventData is the data of the FineTuneEventItem
 type FineTuneEventData struct {
 	Acc           float64 `json:"acc"`
 	Loss          float64 `json:"loss"`
@@ -185,6 +207,7 @@ type FineTuneEventData struct {
 	LearningRate  float64 `json:"learning_rate"`
 }
 
+// FineTuneEventItem is the item of the FineTuneEventListResponse
 type FineTuneEventItem struct {
 	ID        string            `json:"id"`
 	Type      string            `json:"type"`
@@ -195,51 +218,56 @@ type FineTuneEventItem struct {
 	Data      FineTuneEventData `json:"data"`
 }
 
+// FineTuneEventListResponse is the response of the FineTuneEventListService
 type FineTuneEventListResponse struct {
 	Data    []FineTuneEventItem `json:"data"`
 	HasMore bool                `json:"has_more"`
 	Object  string              `json:"object"`
 }
 
-func (c *Client) FineTuneEventListService(jobID string) *FineTuneEventListService {
+// NewFineTuneEventListService creates a new FineTuneEventListService
+func NewFineTuneEventListService(client *Client) *FineTuneEventListService {
 	return &FineTuneEventListService{
-		client: c,
-		jobID:  jobID,
+		client: client,
 	}
 }
 
+// SetJobID sets the jobID parameter
 func (s *FineTuneEventListService) SetJobID(jobID string) *FineTuneEventListService {
 	s.jobID = jobID
 	return s
 }
 
+// SetLimit sets the limit parameter
 func (s *FineTuneEventListService) SetLimit(limit int) *FineTuneEventListService {
 	s.limit = &limit
 	return s
 }
 
+// SetAfter sets the after parameter
 func (s *FineTuneEventListService) SetAfter(after string) *FineTuneEventListService {
 	s.after = &after
 	return s
 }
 
+// Do makes the request
 func (s *FineTuneEventListService) Do(ctx context.Context) (res FineTuneEventListResponse, err error) {
 	var (
 		resp     *resty.Response
 		apiError APIErrorResponse
 	)
 
-	params := map[string]string{}
+	req := s.client.request(ctx)
+
 	if s.limit != nil {
-		params["limit"] = strconv.Itoa(*s.limit)
+		req.SetQueryParam("limit", strconv.Itoa(*s.limit))
 	}
 	if s.after != nil {
-		params["after"] = *s.after
+		req.SetQueryParam("after", *s.after)
 	}
 
-	if resp, err = s.client.request(ctx).
+	if resp, err = req.
 		SetPathParam("job_id", s.jobID).
-		SetQueryParams(params).
 		SetResult(&res).
 		SetError(&apiError).
 		Get("fine_tuning/jobs/{job_id}/events"); err != nil {
@@ -252,23 +280,26 @@ func (s *FineTuneEventListService) Do(ctx context.Context) (res FineTuneEventLis
 	return
 }
 
+// FineTuneGetService creates a new fine tune get
 type FineTuneGetService struct {
 	client *Client
 	jobID  string
 }
 
-func (c *Client) FineTuneGetService(jobID string) *FineTuneGetService {
+// NewFineTuneGetService creates a new FineTuneGetService
+func NewFineTuneGetService(client *Client) *FineTuneGetService {
 	return &FineTuneGetService{
-		client: c,
-		jobID:  jobID,
+		client: client,
 	}
 }
 
+// SetJobID sets the jobID parameter
 func (s *FineTuneGetService) SetJobID(jobID string) *FineTuneGetService {
 	s.jobID = jobID
 	return s
 }
 
+// Do makes the request
 func (s *FineTuneGetService) Do(ctx context.Context) (res FineTuneItem, err error) {
 	var (
 		resp     *resty.Response
@@ -289,6 +320,7 @@ func (s *FineTuneGetService) Do(ctx context.Context) (res FineTuneItem, err erro
 	return
 }
 
+// FineTuneListService creates a new fine tune list
 type FineTuneListService struct {
 	client *Client
 
@@ -296,42 +328,47 @@ type FineTuneListService struct {
 	after *string
 }
 
+// FineTuneListResponse is the response of the FineTuneListService
 type FineTuneListResponse struct {
 	Data   []FineTuneItem `json:"data"`
 	Object string         `json:"object"`
 }
 
-func (c *Client) FineTuneListService() *FineTuneListService {
+// NewFineTuneListService creates a new FineTuneListService
+func NewFineTuneListService(client *Client) *FineTuneListService {
 	return &FineTuneListService{
-		client: c,
+		client: client,
 	}
 }
 
+// SetLimit sets the limit parameter
 func (s *FineTuneListService) SetLimit(limit int) *FineTuneListService {
 	s.limit = &limit
 	return s
 }
+
+// SetAfter sets the after parameter
 func (s *FineTuneListService) SetAfter(after string) *FineTuneListService {
 	s.after = &after
 	return s
 }
 
+// Do makes the request
 func (s *FineTuneListService) Do(ctx context.Context) (res FineTuneListResponse, err error) {
 	var (
 		resp     *resty.Response
 		apiError APIErrorResponse
 	)
 
-	params := map[string]string{}
+	req := s.client.request(ctx)
 	if s.limit != nil {
-		params["limit"] = strconv.Itoa(*s.limit)
+		req.SetQueryParam("limit", strconv.Itoa(*s.limit))
 	}
 	if s.after != nil {
-		params["after"] = *s.after
+		req.SetQueryParam("after", *s.after)
 	}
 
-	if resp, err = s.client.request(ctx).
-		SetQueryParams(params).
+	if resp, err = req.
 		SetResult(&res).
 		SetError(&apiError).
 		Get("fine_tuning/jobs"); err != nil {
@@ -344,23 +381,26 @@ func (s *FineTuneListService) Do(ctx context.Context) (res FineTuneListResponse,
 	return
 }
 
+// FineTuneDeleteService creates a new fine tune delete
 type FineTuneDeleteService struct {
 	client *Client
 	jobID  string
 }
 
-func (c *Client) FineTuneDeleteService(jobID string) *FineTuneDeleteService {
+// NewFineTuneDeleteService creates a new FineTuneDeleteService
+func NewFineTuneDeleteService(client *Client) *FineTuneDeleteService {
 	return &FineTuneDeleteService{
-		client: c,
-		jobID:  jobID,
+		client: client,
 	}
 }
 
+// SetJobID sets the jobID parameter
 func (s *FineTuneDeleteService) SetJobID(jobID string) *FineTuneDeleteService {
 	s.jobID = jobID
 	return s
 }
 
+// Do makes the request
 func (s *FineTuneDeleteService) Do(ctx context.Context) (res FineTuneItem, err error) {
 	var (
 		resp     *resty.Response
@@ -381,23 +421,26 @@ func (s *FineTuneDeleteService) Do(ctx context.Context) (res FineTuneItem, err e
 	return
 }
 
+// FineTuneCancelService creates a new fine tune cancel
 type FineTuneCancelService struct {
 	client *Client
 	jobID  string
 }
 
-func (c *Client) FineTuneCancelService(jobID string) *FineTuneCancelService {
+// NewFineTuneCancelService creates a new FineTuneCancelService
+func NewFineTuneCancelService(client *Client) *FineTuneCancelService {
 	return &FineTuneCancelService{
-		client: c,
-		jobID:  jobID,
+		client: client,
 	}
 }
 
+// SetJobID sets the jobID parameter
 func (s *FineTuneCancelService) SetJobID(jobID string) *FineTuneCancelService {
 	s.jobID = jobID
 	return s
 }
 
+// Do makes the request
 func (s *FineTuneCancelService) Do(ctx context.Context) (res FineTuneItem, err error) {
 	var (
 		resp     *resty.Response
