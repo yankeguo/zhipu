@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.0.6 - 2024-06-28
+#### Features
+- add batch support for result reader - (c062095) - GUO YANKE
+- add fine tune services - (f172f51) - GUO YANKE
+- add knowledge service - (09792b5) - GUO YANKE
+
+- - -
+
 ## v0.0.5 - 2024-06-28
 #### Bug Fixes
 - api error parsing - (60a17f4) - GUO YANKE
