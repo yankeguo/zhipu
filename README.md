@@ -27,7 +27,7 @@ client, err = zhipu.NewClient(zhipu.WithAPIKey("your api key"))
 **ChatCompletion**
 
 ```go
-service := client.ChatCompletionService("glm-4-flash").
+service := client.ChatCompletion("glm-4-flash").
     AddMessage(zhipu.ChatCompletionMessage{
         Role: "user",
         Content: "你好",
@@ -45,7 +45,7 @@ if err != nil {
 **ChatCompletion (Stream)**
 
 ```go
-service := client.ChatCompletionService("glm-4-flash").
+service := client.ChatCompletion("glm-4-flash").
     AddMessage(zhipu.ChatCompletionMessage{
         Role: "user",
         Content: "你好",
@@ -67,21 +67,21 @@ if err != nil {
 **Embedding**
 
 ```go
-service := client.EmbeddingService("embedding-v2").SetInput("你好呀")
+service := client.Embedding("embedding-v2").SetInput("你好呀")
 service.Do(context.Background())
 ```
 
 **Image Generation**
 
 ```go
-service := client.ImageGenerationService("cogview-3").SetPrompt("一只可爱的小猫咪")
+service := client.ImageGeneration("cogview-3").SetPrompt("一只可爱的小猫咪")
 service.Do(context.Background())
 ```
 
 **Upload File (Retrieval)**
 
 ```go
-service := client.FileCreateService(zhipu.FilePurposeRetrieval)
+service := client.FileCreate(zhipu.FilePurposeRetrieval)
 service.SetLocalFile(filepath.Join("testdata", "test-file.txt"))
 service.SetKnowledgeID("your-knowledge-id")
 
@@ -91,7 +91,7 @@ service.Do(context.Background())
 **Upload File (Fine-Tune)**
 
 ```go
-service := client.FileCreateService(zhipu.FilePurposeFineTune)
+service := client.FileCreate(zhipu.FilePurposeFineTune)
 service.SetLocalFile(filepath.Join("testdata", "test-file.jsonl"))
 service.Do(context.Background())
 ```
@@ -99,7 +99,7 @@ service.Do(context.Background())
 **Batch Create**
 
 ```go
-service := client.BatchCreateService().
+service := client.BatchCreate().
   SetInputFileID("fileid").
   SetCompletionWindow(zhipu.BatchCompletionWindow24h).
   SetEndpoint(BatchEndpointV4ChatCompletions)
@@ -109,14 +109,14 @@ service.Do(context.Background())
 **Knowledge Base**
 
 ```go
-client.KnowledgeCreateService("")
-client.KnowledgeEditService("")
+client.KnowledgeCreate("")
+client.KnowledgeEdit("")
 ```
 
 **Fine Tune**
 
 ```go
-client.FineTuneCreateService("")
+client.FineTuneCreate("")
 ```
 
 ### Batch Support
@@ -128,15 +128,13 @@ f, err := os.OpenFile("batch.jsonl", os.O_CREATE|os.O_WRONLY, 0644)
 
 bw := zhipu.NewBatchFileWriter(f)
 
-bw.Add("action_1", client.ChatCompletionService("glm-4-flash").
+bw.Add("action_1", client.ChatCompletion("glm-4-flash").
     AddMessage(zhipu.ChatCompletionMessage{
         Role: "user",
         Content: "你好",
     }))
-
-bw.Add("action_2", client.EmbeddingService("embedding-v2").SetInput("你好呀"))
-
-bw.Add("action_3", client.ImageGenerationService("cogview-3").SetPrompt("一只可爱的小猫咪"))
+bw.Add("action_2", client.Embedding("embedding-v2").SetInput("你好呀"))
+bw.Add("action_3", client.ImageGeneration("cogview-3").SetPrompt("一只可爱的小猫咪"))
 ```
 
 **Batch Result Reader**
