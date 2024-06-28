@@ -106,9 +106,18 @@ service := client.BatchCreateService().
 service.Do(context.Background())
 ```
 
-> [!NOTE]
->
-> More APIs are coming soon.
+**Knowledge Base**
+
+```go
+client.KnowledgeCreateService("")
+client.KnowledgeEditService("")
+```
+
+**Fine Tune**
+
+```go
+client.FineTuneCreateService("")
+```
 
 ### Batch Support
 
@@ -129,6 +138,21 @@ bw.Add("action_2", client.EmbeddingService("embedding-v2").SetInput("你好呀")
 
 bw.Add("action_3", client.ImageGenerationService("cogview-3").SetPrompt("一只可爱的小猫咪"))
 ```
+
+**Batch Result Reader**
+
+```go
+br := zhipu.NewBatchResultReader[zhipu.ChatCompletionResponse](r)
+
+for {
+    var res zhipu.BatchResult[zhipu.ChatCompletionResponse]
+    err := br.Read(&res)
+    if err != nil {
+        break
+    }
+}
+```
+
 ## Credits
 
 GUO YANKE, MIT License
