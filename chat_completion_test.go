@@ -11,7 +11,7 @@ func TestChatCompletionService(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.ChatCompletionService("glm-4-flash")
+	s := client.ChatCompletion("glm-4-flash")
 	s.AddMessage(ChatCompletionMessage{
 		Role:    RoleUser,
 		Content: "你好呀",
@@ -28,7 +28,7 @@ func TestChatCompletionServiceCharGLM(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.ChatCompletionService("charglm-3")
+	s := client.ChatCompletion("charglm-3")
 	s.SetMeta(
 		ChatCompletionMeta{
 			UserName: "啵酱",
@@ -54,7 +54,7 @@ func TestChatCompletionServiceStream(t *testing.T) {
 
 	var content string
 
-	s := client.ChatCompletionService("glm-4-flash").AddMessage(ChatCompletionMessage{
+	s := client.ChatCompletion("glm-4-flash").AddMessage(ChatCompletionMessage{
 		Role:    RoleUser,
 		Content: "你好呀",
 	}).SetStreamHandler(func(chunk ChatCompletionResponse) error {
@@ -74,7 +74,7 @@ func TestChatCompletionServiceVision(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.ChatCompletionService("glm-4v")
+	s := client.ChatCompletion("glm-4v")
 	s.AddMessage(ChatCompletionMultiMessage{
 		Role: RoleUser,
 		Content: []ChatCompletionMultiContent{

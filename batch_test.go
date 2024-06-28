@@ -15,11 +15,11 @@ func TestBatchServiceAll(t *testing.T) {
 	buf := &bytes.Buffer{}
 
 	bfw := NewBatchFileWriter(buf)
-	err = bfw.Write("batch_1", client.ChatCompletionService("glm-4-flash").AddMessage(ChatCompletionMessage{
+	err = bfw.Write("batch_1", client.ChatCompletion("glm-4-flash").AddMessage(ChatCompletionMessage{
 		Role: RoleUser, Content: "你好呀",
 	}))
 	require.NoError(t, err)
-	err = bfw.Write("batch_2", client.ChatCompletionService("glm-4-flash").AddMessage(ChatCompletionMessage{
+	err = bfw.Write("batch_2", client.ChatCompletion("glm-4-flash").AddMessage(ChatCompletionMessage{
 		Role: RoleUser, Content: "你叫什么名字",
 	}))
 	require.NoError(t, err)

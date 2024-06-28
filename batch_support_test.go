@@ -15,7 +15,7 @@ func TestBatchFileWriter(t *testing.T) {
 	buf := &bytes.Buffer{}
 
 	w := NewBatchFileWriter(buf)
-	err = w.Write("batch-1", client.ChatCompletionService("a").AddMessage(ChatCompletionMessage{
+	err = w.Write("batch-1", client.ChatCompletion("a").AddMessage(ChatCompletionMessage{
 		Role: "user", Content: "hello",
 	}))
 	require.NoError(t, err)

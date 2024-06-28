@@ -268,11 +268,10 @@ var (
 	_ BatchSupport = &ChatCompletionService{}
 )
 
-// ChatCompletionRequest is the request for chat completion
-func (c *Client) ChatCompletionService(model string) *ChatCompletionService {
+// NewChatCompletionService creates a new ChatCompletionService.
+func NewChatCompletionService(client *Client) *ChatCompletionService {
 	return &ChatCompletionService{
-		client: c,
-		model:  model,
+		client: client,
 	}
 }
 

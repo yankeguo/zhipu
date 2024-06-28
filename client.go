@@ -160,6 +160,11 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	return
 }
 
+// ChatCompletion creates a new ChatCompletionService.
+func (c *Client) ChatCompletion(model string) *ChatCompletionService {
+	return NewChatCompletionService(c).SetModel(model)
+}
+
 // Embedding embeds a list of text into a vector space.
 func (c *Client) Embedding(model string) *EmbeddingService {
 	return NewEmbeddingService(c).SetModel(model)
