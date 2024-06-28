@@ -7,6 +7,17 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+func TestKnowledgeCapacity(t *testing.T) {
+	client, err := NewClient()
+	require.NoError(t, err)
+
+	s := client.KnowledgeCapacity()
+	res, err := s.Do(context.Background())
+	require.NoError(t, err)
+	require.NotEmpty(t, res.Total.Length)
+	require.NotEmpty(t, res.Total.WordNum)
+}
+
 func TestKnowledgeServiceAll(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)

@@ -256,3 +256,44 @@ func (s *KnowledgeDeleteService) Do(ctx context.Context) (err error) {
 	}
 	return
 }
+
+// KnowledgeCapacityService query the capacity of the knowledge
+type KnowledgeCapacityService struct {
+	client *Client
+}
+
+// KnowledgeCapacityItem is an item in the knowledge capacity
+type KnowledgeCapacityItem struct {
+	WordNum int64 `json:"word_num"`
+	Length  int64 `json:"length"`
+}
+
+// KnowledgeCapacityResponse is the response of the KnowledgeCapacityService
+type KnowledgeCapacityResponse struct {
+	Used  KnowledgeCapacityItem `json:"used"`
+	Total KnowledgeCapacityItem `json:"total"`
+}
+
+// SetKnowledgeID sets the knowledge id
+func NewKnowledgeCapacityService(client *Client) *KnowledgeCapacityService {
+	return &KnowledgeCapacityService{client: client}
+}
+
+// Do query the capacity of the knowledge
+func (s *KnowledgeCapacityService) Do(ctx context.Context) (res KnowledgeCapacityResponse, err error) {
+	var (
+		resp     *resty.Response
+		apiError APIErrorResponse
+	)
+	if resp, err = s.client.request(ctx).
+		SetResult(&res).
+		SetError(&apiError).
+		Get("knowledge/capacity"); err != nil {
+		return
+	}
+	if resp.IsError() {
+		err = apiError
+		return
+	}
+	return
+}

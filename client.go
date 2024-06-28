@@ -274,3 +274,8 @@ func (c *Client) KnowledgeList() *KnowledgeListService {
 func (c *Client) KnowledgeDelete(knowledgeID string) *KnowledgeDeleteService {
 	return NewKnowledgeDeleteService(c).SetKnowledgeID(knowledgeID)
 }
+
+// KnowledgeGet creates a new knowledge get service
+func (c *Client) KnowledgeCapacity() *KnowledgeCapacityService {
+	return NewKnowledgeCapacityService(c)
+}
