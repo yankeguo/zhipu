@@ -2,6 +2,25 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.1.0 - 2024-06-28
+#### Bug Fixes
+- rename client function for batch list - (40ac05f) - GUO YANKE
+#### Documentation
+- update README.md [skip ci] - (6ce5754) - GUO YANKE
+#### Features
+- add knowledge capacity service - (4ce62b3) - GUO YANKE
+#### Refactoring
+- update batch service - (b92d438) - GUO YANKE
+- update chat completion service - (19dd77f) - GUO YANKE
+- update embedding service - (c1bbc2d) - GUO YANKE
+- update file services - (7ef4d87) - GUO YANKE
+- update fine tune services, using APIError - (15aed88) - GUO YANKE
+- update fine tune services - (664523b) - GUO YANKE
+- update image generation service - (a18e028) - GUO YANKE
+- update knowledge services - (c7bfb73) - GUO YANKE
+
+- - -
+
 ## v0.0.6 - 2024-06-28
 #### Features
 - add batch support for result reader - (c062095) - GUO YANKE
