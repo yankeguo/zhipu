@@ -13,7 +13,7 @@ func TestFileServiceFineTune(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.FileCreateService(FilePurposeFineTune)
+	s := client.FileCreate(FilePurposeFineTune)
 	s.SetLocalFile(filepath.Join("testdata", "test-file.jsonl"))
 
 	res, err := s.Do(context.Background())
@@ -27,7 +27,7 @@ func TestFileServiceKnowledge(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.FileCreateService(FilePurposeRetrieval)
+	s := client.FileCreate(FilePurposeRetrieval)
 	s.SetKnowledgeID(os.Getenv("TEST_KNOWLEDGE_ID"))
 	s.SetLocalFile(filepath.Join("testdata", "test-file.txt"))
 
@@ -39,14 +39,14 @@ func TestFileServiceKnowledge(t *testing.T) {
 
 	documentID := res.SuccessInfos[0].DocumentID
 
-	res2, err := client.FileGetService(documentID).Do(context.Background())
+	res2, err := client.FileGet(documentID).Do(context.Background())
 	require.NoError(t, err)
 	require.NotEmpty(t, res2.ID)
 
-	err = client.FileEditService(documentID).SetKnowledgeType(KnowledgeTypeCustom).Do(context.Background())
+	err = client.FileEdit(documentID).SetKnowledgeType(KnowledgeTypeCustom).Do(context.Background())
 	require.True(t, err == nil || GetAPIErrorCode(err) == "10019")
 
-	err = client.FileDeleteService(res.SuccessInfos[0].DocumentID).Do(context.Background())
+	err = client.FileDelete(res.SuccessInfos[0].DocumentID).Do(context.Background())
 	require.True(t, err == nil || GetAPIErrorCode(err) == "10019")
 }
 
@@ -54,7 +54,7 @@ func TestFileListServiceKnowledge(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.FileListService(FilePurposeRetrieval).SetKnowledgeID(os.Getenv("TEST_KNOWLEDGE_ID"))
+	s := client.FileList(FilePurposeRetrieval).SetKnowledgeID(os.Getenv("TEST_KNOWLEDGE_ID"))
 	res, err := s.Do(context.Background())
 	require.NoError(t, err)
 	require.NotEmpty(t, res.List)
@@ -64,7 +64,7 @@ func TestFileListServiceFineTune(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.FileListService(FilePurposeFineTune)
+	s := client.FileList(FilePurposeFineTune)
 	res, err := s.Do(context.Background())
 	require.NoError(t, err)
 	require.NotEmpty(t, res.Data)

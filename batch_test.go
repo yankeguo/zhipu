@@ -24,7 +24,7 @@ func TestBatchServiceAll(t *testing.T) {
 	}))
 	require.NoError(t, err)
 
-	res, err := client.FileCreateService(FilePurposeBatch).SetFile(bytes.NewReader(buf.Bytes()), "batch.jsonl").Do(context.Background())
+	res, err := client.FileCreate(FilePurposeBatch).SetFile(bytes.NewReader(buf.Bytes()), "batch.jsonl").Do(context.Background())
 	require.NoError(t, err)
 
 	fileID := res.FileCreateFineTuneResponse.ID

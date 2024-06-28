@@ -21,7 +21,7 @@ func TestBatchFileWriter(t *testing.T) {
 	require.NoError(t, err)
 	err = w.Write("batch-2", client.EmbeddingService("c").SetInput("whoa"))
 	require.NoError(t, err)
-	err = w.Write("batch-3", client.ImageGenerationService("d").SetPrompt("whoa"))
+	err = w.Write("batch-3", client.ImageGeneration("d").SetPrompt("whoa"))
 	require.NoError(t, err)
 
 	require.Equal(t, `{"body":{"messages":[{"role":"user","content":"hello"}],"model":"a"},"custom_id":"batch-1","method":"POST","url":"/v4/chat/completions"}

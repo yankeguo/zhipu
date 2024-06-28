@@ -160,6 +160,36 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	return
 }
 
+// FileCreate creates a new FileCreateService.
+func (c *Client) FileCreate(purpose string) *FileCreateService {
+	return NewFileCreateService(c).SetPurpose(purpose)
+}
+
+// FileEditService creates a new FileEditService.
+func (c *Client) FileEdit(documentID string) *FileEditService {
+	return NewFileEditService(c).SetDocumentID(documentID)
+}
+
+// FileList creates a new FileListService.
+func (c *Client) FileList(purpose string) *FileListService {
+	return NewFileListService(c).SetPurpose(purpose)
+}
+
+// FileDeleteService creates a new FileDeleteService.
+func (c *Client) FileDelete(documentID string) *FileDeleteService {
+	return NewFileDeleteService(c).SetDocumentID(documentID)
+}
+
+// FileGetService creates a new FileGetService.
+func (c *Client) FileGet(documentID string) *FileGetService {
+	return NewFileGetService(c).SetDocumentID(documentID)
+}
+
+// FileDownload creates a new FileDownloadService.
+func (c *Client) FileDownload(fileID string) *FileDownloadService {
+	return NewFileDownloadService(c).SetFileID(fileID)
+}
+
 // FineTuneCreate creates a new fine tune create service
 func (c *Client) FineTuneCreate(model string) *FineTuneCreateService {
 	return NewFineTuneCreateService(c).SetModel(model)
