@@ -159,3 +159,23 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	}
 	return
 }
+
+// KnowledgeCreate creates a new knowledge create service
+func (c *Client) KnowledgeCreate() *KnowledgeCreateService {
+	return NewKnowledgeCreateService(c)
+}
+
+// KnowledgeEdit creates a new knowledge edit service
+func (c *Client) KnowledgeEdit(knowledgeID string) *KnowledgeEditService {
+	return NewKnowledgeEditService(c).SetKnowledgeID(knowledgeID)
+}
+
+// KnowledgeList list all the knowledge
+func (c *Client) KnowledgeList() *KnowledgeListService {
+	return NewKnowledgeListService(c)
+}
+
+// KnowledgeDelete creates a new knowledge delete service
+func (c *Client) KnowledgeDelete(knowledgeID string) *KnowledgeDeleteService {
+	return NewKnowledgeDeleteService(c).SetKnowledgeID(knowledgeID)
+}

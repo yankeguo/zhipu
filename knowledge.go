@@ -11,38 +11,44 @@ const (
 	KnowledgeEmbeddingIDEmbedding2 = 3
 )
 
+// KnowledgeCreateService creates a new knowledge
 type KnowledgeCreateService struct {
-	client      *Client
+	client *Client
+
 	embeddingID int
 	name        string
 	description *string
 }
 
+// KnowledgeCreateResponse is the response of the KnowledgeCreateService
 type KnowledgeCreateResponse = IDItem
 
-func (c *Client) KnowledgeCreateService(name string) *KnowledgeCreateService {
+// NewKnowledgeCreateService creates a new KnowledgeCreateService
+func NewKnowledgeCreateService(client *Client) *KnowledgeCreateService {
 	return &KnowledgeCreateService{
-		client:      c,
-		embeddingID: KnowledgeEmbeddingIDEmbedding2,
-		name:        name,
+		client: client,
 	}
 }
 
+// SetEmbeddingID sets the embedding id of the knowledge
 func (s *KnowledgeCreateService) SetEmbeddingID(embeddingID int) *KnowledgeCreateService {
 	s.embeddingID = embeddingID
 	return s
 }
 
+// SetName sets the name of the knowledge
 func (s *KnowledgeCreateService) SetName(name string) *KnowledgeCreateService {
 	s.name = name
 	return s
 }
 
+// SetDescription sets the description of the knowledge
 func (s *KnowledgeCreateService) SetDescription(description string) *KnowledgeCreateService {
 	s.description = &description
 	return s
 }
 
+// Do creates the knowledge
 func (s *KnowledgeCreateService) Do(ctx context.Context) (res KnowledgeCreateResponse, err error) {
 	var (
 		resp     *resty.Response
@@ -65,37 +71,49 @@ func (s *KnowledgeCreateService) Do(ctx context.Context) (res KnowledgeCreateRes
 	return
 }
 
+// KnowledgeEditService edits a knowledge
 type KnowledgeEditService struct {
 	client *Client
 
 	knowledgeID string
+
 	embeddingID *int
 	name        *string
 	description *string
 }
 
-func (c *Client) KnowledgeEditService(knowledgeID string) *KnowledgeEditService {
+// NewKnowledgeEditService creates a new KnowledgeEditService
+func NewKnowledgeEditService(client *Client) *KnowledgeEditService {
 	return &KnowledgeEditService{
-		client:      c,
-		knowledgeID: knowledgeID,
+		client: client,
 	}
 }
 
+// SetKnowledgeID sets the knowledge id
+func (s *KnowledgeEditService) SetKnowledgeID(knowledgeID string) *KnowledgeEditService {
+	s.knowledgeID = knowledgeID
+	return s
+}
+
+// SetName sets the name of the knowledge
 func (s *KnowledgeEditService) SetName(name string) *KnowledgeEditService {
 	s.name = &name
 	return s
 }
 
+// SetEmbeddingID sets the embedding id of the knowledge
 func (s *KnowledgeEditService) SetEmbeddingID(embeddingID int) *KnowledgeEditService {
 	s.embeddingID = &embeddingID
 	return s
 }
 
+// SetDescription sets the description of the knowledge
 func (s *KnowledgeEditService) SetDescription(description string) *KnowledgeEditService {
 	s.description = &description
 	return s
 }
 
+// Do edits the knowledge
 func (s *KnowledgeEditService) Do(ctx context.Context) (err error) {
 	var (
 		resp     *resty.Response
@@ -121,6 +139,7 @@ func (s *KnowledgeEditService) Do(ctx context.Context) (err error) {
 	return
 }
 
+// KnowledgeListService lists the knowledge
 type KnowledgeListService struct {
 	client *Client
 
@@ -128,6 +147,7 @@ type KnowledgeListService struct {
 	size *int
 }
 
+// KnowledgeItem is an item in the knowledge list
 type KnowledgeItem struct {
 	ID               string `json:"id"`
 	Name             string `json:"name"`
@@ -141,25 +161,30 @@ type KnowledgeItem struct {
 	DocumentSize     int64  `json:"document_size"`
 }
 
+// KnowledgeListResponse is the response of the KnowledgeListService
 type KnowledgeListResponse struct {
 	List  []KnowledgeItem `json:"list"`
 	Total int             `json:"total"`
 }
 
-func (c *Client) KnowledgeListService() *KnowledgeListService {
-	return &KnowledgeListService{client: c}
+// NewKnowledgeListService creates a new KnowledgeListService
+func NewKnowledgeListService(client *Client) *KnowledgeListService {
+	return &KnowledgeListService{client: client}
 }
 
+// SetPage sets the page of the knowledge list
 func (s *KnowledgeListService) SetPage(page int) *KnowledgeListService {
 	s.page = &page
 	return s
 }
 
+// SetSize sets the size of the knowledge list
 func (s *KnowledgeListService) SetSize(size int) *KnowledgeListService {
 	s.size = &size
 	return s
 }
 
+// Do lists the knowledge
 func (s *KnowledgeListService) Do(ctx context.Context) (res KnowledgeListResponse, err error) {
 	var (
 		resp     *resty.Response
@@ -182,23 +207,27 @@ func (s *KnowledgeListService) Do(ctx context.Context) (res KnowledgeListRespons
 	return
 }
 
+// KnowledgeDeleteService deletes a knowledge
 type KnowledgeDeleteService struct {
-	client      *Client
+	client *Client
+
 	knowledgeID string
 }
 
-func (c *Client) KnowledgeDeleteService(knowledgeID string) *KnowledgeDeleteService {
+// NewKnowledgeDeleteService creates a new KnowledgeDeleteService
+func NewKnowledgeDeleteService(client *Client) *KnowledgeDeleteService {
 	return &KnowledgeDeleteService{
-		client:      c,
-		knowledgeID: knowledgeID,
+		client: client,
 	}
 }
 
+// SetKnowledgeID sets the knowledge id
 func (s *KnowledgeDeleteService) SetKnowledgeID(knowledgeID string) *KnowledgeDeleteService {
 	s.knowledgeID = knowledgeID
 	return s
 }
 
+// Do deletes the knowledge
 func (s *KnowledgeDeleteService) Do(ctx context.Context) (err error) {
 	var (
 		resp     *resty.Response

@@ -84,7 +84,7 @@ func TestChatCompletionServiceVision(t *testing.T) {
 			},
 			{
 				Type: MultiContentTypeImageURL,
-				ImageURL: &ImageURL{
+				ImageURL: &URLItem{
 					URL: "https://img1.baidu.com/it/u=1369931113,3388870256&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1703696400&t=f3028c7a1dca43a080aeb8239f09cc2f",
 				},
 			},

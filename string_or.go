@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 )
 
+// StringOr is a struct that can be either a string or a value of type T.
 type StringOr[T any] struct {
 	String *string
 	Value  *T
@@ -15,11 +16,13 @@ var (
 	_ json.Unmarshaler = &StringOr[float64]{}
 )
 
+// SetString sets the string value of the struct.
 func (f *StringOr[T]) SetString(v string) {
 	f.String = &v
 	f.Value = nil
 }
 
+// SetValue sets the value of the struct.
 func (f *StringOr[T]) SetValue(v T) {
 	f.String = nil
 	f.Value = &v

@@ -19,8 +19,8 @@ var (
 )
 
 type ImageGenerationResponse struct {
-	Created int64      `json:"created"`
-	Data    []ImageURL `json:"data"`
+	Created int64     `json:"created"`
+	Data    []URLItem `json:"data"`
 }
 
 func (c *Client) ImageGenerationService(model string) *ImageGenerationService {

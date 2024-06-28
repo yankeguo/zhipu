@@ -108,9 +108,9 @@ type ChatCompletionMessage struct {
 func (ChatCompletionMessage) isChatCompletionMessageType() {}
 
 type ChatCompletionMultiContent struct {
-	Type     string    `json:"type"`
-	Text     string    `json:"text"`
-	ImageURL *ImageURL `json:"image_url,omitempty"`
+	Type     string   `json:"type"`
+	Text     string   `json:"text"`
+	ImageURL *URLItem `json:"image_url,omitempty"`
 }
 
 // ChatCompletionMultiMessage is the multi message for chat completion
