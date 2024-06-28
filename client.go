@@ -160,6 +160,26 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	return
 }
 
+// BatchCreate creates a new BatchCreateService.
+func (c *Client) BatchCreate() *BatchCreateService {
+	return NewBatchCreateService(c)
+}
+
+// BatchGet creates a new BatchGetService.
+func (c *Client) BatchGet(batchID string) *BatchGetService {
+	return NewBatchGetService(c).SetBatchID(batchID)
+}
+
+// BatchCancel creates a new BatchCancelService.
+func (c *Client) BatchCancel(batchID string) *BatchCancelService {
+	return NewBatchCancelService(c).SetBatchID(batchID)
+}
+
+// BatchList creates a new BatchListService.
+func (c *Client) BatchListService() *BatchListService {
+	return NewBatchListService(c)
+}
+
 // ChatCompletion creates a new ChatCompletionService.
 func (c *Client) ChatCompletion(model string) *ChatCompletionService {
 	return NewChatCompletionService(c).SetModel(model)

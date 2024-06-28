@@ -30,14 +30,14 @@ func TestBatchServiceAll(t *testing.T) {
 	fileID := res.FileCreateFineTuneResponse.ID
 	require.NotEmpty(t, fileID)
 
-	res1, err := client.BatchCreateService().
+	res1, err := client.BatchCreate().
 		SetInputFileID(fileID).
 		SetCompletionWindow(BatchCompletionWindow24h).
 		SetEndpoint(BatchEndpointV4ChatCompletions).Do(context.Background())
 	require.NoError(t, err)
 	require.NotEmpty(t, res1.ID)
 
-	res2, err := client.BatchGetService(res1.ID).Do(context.Background())
+	res2, err := client.BatchGet(res1.ID).Do(context.Background())
 	require.NoError(t, err)
 	require.Equal(t, res2.ID, res1.ID)
 
@@ -45,7 +45,7 @@ func TestBatchServiceAll(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, res3.Data)
 
-	err = client.BatchCancelService(res1.ID).Do(context.Background())
+	err = client.BatchCancel(res1.ID).Do(context.Background())
 	require.NoError(t, err)
 }
 
