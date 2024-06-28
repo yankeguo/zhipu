@@ -160,6 +160,11 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 	return
 }
 
+// ImageGeneration creates a new image generation service
+func (c *Client) ImageGeneration(model string) *ImageGenerationService {
+	return NewImageGenerationService(c).SetModel(model)
+}
+
 // KnowledgeCreate creates a new knowledge create service
 func (c *Client) KnowledgeCreate() *KnowledgeCreateService {
 	return NewKnowledgeCreateService(c)

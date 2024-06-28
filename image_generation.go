@@ -6,6 +6,7 @@ import (
 	"github.com/go-resty/resty/v2"
 )
 
+// ImageGenerationService creates a new image generation
 type ImageGenerationService struct {
 	client *Client
 
@@ -18,15 +19,16 @@ var (
 	_ BatchSupport = &ImageGenerationService{}
 )
 
+// ImageGenerationResponse is the response of the ImageGenerationService
 type ImageGenerationResponse struct {
 	Created int64     `json:"created"`
 	Data    []URLItem `json:"data"`
 }
 
-func (c *Client) ImageGenerationService(model string) *ImageGenerationService {
+// NewImageGenerationService creates a new ImageGenerationService
+func NewImageGenerationService(client *Client) *ImageGenerationService {
 	return &ImageGenerationService{
-		client: c,
-		model:  model,
+		client: client,
 	}
 }
 
@@ -81,7 +83,11 @@ func (s *ImageGenerationService) Do(ctx context.Context) (res ImageGenerationRes
 
 	body := s.buildBody()
 
-	if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("images/generations"); err != nil {
+	if resp, err = s.client.request(ctx).
+		SetBody(body).
+		SetResult(&res).
+		SetError(&apiError).
+		Post("images/generations"); err != nil {
 		return
 	}
 

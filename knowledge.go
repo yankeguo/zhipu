@@ -61,7 +61,11 @@ func (s *KnowledgeCreateService) Do(ctx context.Context) (res KnowledgeCreateRes
 	if s.description != nil {
 		body["description"] = *s.description
 	}
-	if resp, err = s.client.request(ctx).SetBody(body).SetResult(&res).SetError(&apiError).Post("knowledge"); err != nil {
+	if resp, err = s.client.request(ctx).
+		SetBody(body).
+		SetResult(&res).
+		SetError(&apiError).
+		Post("knowledge"); err != nil {
 		return
 	}
 	if resp.IsError() {
@@ -129,7 +133,11 @@ func (s *KnowledgeEditService) Do(ctx context.Context) (err error) {
 	if s.embeddingID != nil {
 		body["embedding_id"] = *s.embeddingID
 	}
-	if resp, err = s.client.request(ctx).SetBody(body).SetPathParam("knowledge_id", s.knowledgeID).SetError(&apiError).Put("knowledge/{knowledge_id}"); err != nil {
+	if resp, err = s.client.request(ctx).
+		SetPathParam("knowledge_id", s.knowledgeID).
+		SetBody(body).
+		SetError(&apiError).
+		Put("knowledge/{knowledge_id}"); err != nil {
 		return
 	}
 	if resp.IsError() {
@@ -197,7 +205,10 @@ func (s *KnowledgeListService) Do(ctx context.Context) (res KnowledgeListRespons
 	if s.size != nil {
 		req.SetQueryParam("size", strconv.Itoa(*s.size))
 	}
-	if resp, err = req.SetResult(&res).SetError(&apiError).Get("knowledge"); err != nil {
+	if resp, err = req.
+		SetResult(&res).
+		SetError(&apiError).
+		Get("knowledge"); err != nil {
 		return
 	}
 	if resp.IsError() {
@@ -233,7 +244,10 @@ func (s *KnowledgeDeleteService) Do(ctx context.Context) (err error) {
 		resp     *resty.Response
 		apiError APIErrorResponse
 	)
-	if resp, err = s.client.request(ctx).SetPathParam("knowledge_id", s.knowledgeID).SetError(&apiError).Delete("knowledge/{knowledge_id}"); err != nil {
+	if resp, err = s.client.request(ctx).
+		SetPathParam("knowledge_id", s.knowledgeID).
+		SetError(&apiError).
+		Delete("knowledge/{knowledge_id}"); err != nil {
 		return
 	}
 	if resp.IsError() {

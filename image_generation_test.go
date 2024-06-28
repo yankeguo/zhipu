@@ -11,7 +11,7 @@ func TestImageGenerationService(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	s := client.ImageGenerationService("cogview-3")
+	s := client.ImageGeneration("cogview-3")
 	s.SetPrompt("一只可爱的小猫")
 
 	res, err := s.Do(context.Background())
