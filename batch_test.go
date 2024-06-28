@@ -41,7 +41,7 @@ func TestBatchServiceAll(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, res2.ID, res1.ID)
 
-	res3, err := client.BatchListService().Do(context.Background())
+	res3, err := client.BatchList().Do(context.Background())
 	require.NoError(t, err)
 	require.NotEmpty(t, res3.Data)
 
@@ -53,7 +53,7 @@ func TestBatchListService(t *testing.T) {
 	client, err := NewClient()
 	require.NoError(t, err)
 
-	res, err := client.BatchListService().Do(context.Background())
+	res, err := client.BatchList().Do(context.Background())
 	require.NoError(t, err)
 	t.Log(res)
 }

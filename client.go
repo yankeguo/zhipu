@@ -176,7 +176,7 @@ func (c *Client) BatchCancel(batchID string) *BatchCancelService {
 }
 
 // BatchList creates a new BatchListService.
-func (c *Client) BatchListService() *BatchListService {
+func (c *Client) BatchList() *BatchListService {
 	return NewBatchListService(c)
 }
 
