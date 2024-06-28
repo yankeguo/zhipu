@@ -2,6 +2,17 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.0.5 - 2024-06-28
+#### Bug Fixes
+- api error parsing - (60a17f4) - GUO YANKE
+#### Features
+- add batch service - (389aec3) - GUO YANKE
+- add batch support for chat completions, image generations and embeddings - (c017ffd) - GUO YANKE
+- add file edit/get/delete service - (8a4d309) - GUO YANKE
+- add file create serivce - (6d2140b) - GUO YANKE
+
+- - -
+
 ## v0.0.4 - 2024-06-26
 #### Bug Fixes
 - remove Client.R(), hide resty for future removal - (dc2a4ca) - GUO YANKE
