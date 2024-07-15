@@ -151,6 +151,12 @@ for {
 }
 ```
 
+## Donation
+
+微信扫码捐赠，感谢您的支持！
+
+<img src="./wechat-donation.png" width="180"/>
+
 ## Credits
 
 GUO YANKE, MIT License
