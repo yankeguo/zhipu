@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.1.1 - 2024-07-17
+#### Documentation
+- update README.md [skip ci] - (695432a) - GUO YANKE
+#### Features
+- add support for GLM-4-AllTools - (9627a36) - GUO YANKE
+
+- - -
+
 ## v0.1.0 - 2024-06-28
 #### Bug Fixes
 - rename client function for batch list - (40ac05f) - GUO YANKE
