@@ -2,6 +2,7 @@ package zhipu
 
 import (
 	"context"
+	"encoding/json"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -46,6 +47,156 @@ func TestChatCompletionServiceCharGLM(t *testing.T) {
 	choice := res.Choices[0]
 	require.Equal(t, FinishReasonStop, choice.FinishReason)
 	require.NotEmpty(t, choice.Message.Content)
+}
+
+func TestChatCompletionServiceAllToolsCodeInterpreter(t *testing.T) {
+	client, err := NewClient()
+	require.NoError(t, err)
+
+	s := client.ChatCompletion("GLM-4-AllTools")
+	s.AddMessage(ChatCompletionMultiMessage{
+		Role: "user",
+		Content: []ChatCompletionMultiContent{
+			{
+				Type: "text",
+				Text: "计算[5,10,20,700,99,310,978,100]的平均值和方差。",
+			},
+		},
+	})
+	s.AddTool(ChatCompletionToolCodeInterpreter{
+		Sandbox: Ptr(CodeInterpreterSandboxAuto),
+	})
+
+	foundInterpreterInput := false
+	foundInterpreterOutput := false
+
+	s.SetStreamHandler(func(chunk ChatCompletionResponse) error {
+		for _, c := range chunk.Choices {
+			for _, tc := range c.Delta.ToolCalls {
+				if tc.Type == ToolTypeCodeInterpreter && tc.CodeInterpreter != nil {
+					if tc.CodeInterpreter.Input != "" {
+						foundInterpreterInput = true
+					}
+					if len(tc.CodeInterpreter.Outputs) > 0 {
+						foundInterpreterOutput = true
+					}
+				}
+			}
+		}
+		buf, _ := json.MarshalIndent(chunk, "", "  ")
+		t.Log(string(buf))
+		return nil
+	})
+
+	res, err := s.Do(context.Background())
+	require.True(t, foundInterpreterInput)
+	require.True(t, foundInterpreterOutput)
+	require.NotNil(t, res)
+	require.NoError(t, err)
+}
+
+func TestChatCompletionServiceAllToolsDrawingTool(t *testing.T) {
+	client, err := NewClient()
+	require.NoError(t, err)
+
+	s := client.ChatCompletion("GLM-4-AllTools")
+	s.AddMessage(ChatCompletionMultiMessage{
+		Role: "user",
+		Content: []ChatCompletionMultiContent{
+			{
+				Type: "text",
+				Text: "画一个正弦函数图像",
+			},
+		},
+	})
+	s.AddTool(ChatCompletionToolDrawingTool{})
+
+	foundInput := false
+	foundOutput := false
+	outputImage := ""
+
+	s.SetStreamHandler(func(chunk ChatCompletionResponse) error {
+		for _, c := range chunk.Choices {
+			for _, tc := range c.Delta.ToolCalls {
+				if tc.Type == ToolTypeDrawingTool && tc.DrawingTool != nil {
+					if tc.DrawingTool.Input != "" {
+						foundInput = true
+					}
+					if len(tc.DrawingTool.Outputs) > 0 {
+						foundOutput = true
+					}
+					for _, output := range tc.DrawingTool.Outputs {
+						if output.Image != "" {
+							outputImage = output.Image
+						}
+					}
+				}
+			}
+		}
+		buf, _ := json.MarshalIndent(chunk, "", "  ")
+		t.Log(string(buf))
+		return nil
+	})
+
+	res, err := s.Do(context.Background())
+	require.True(t, foundInput)
+	require.True(t, foundOutput)
+	require.NotEmpty(t, outputImage)
+	t.Log(outputImage)
+	require.NotNil(t, res)
+	require.NoError(t, err)
+}
+
+func TestChatCompletionServiceAllToolsWebBrowser(t *testing.T) {
+	client, err := NewClient()
+	require.NoError(t, err)
+
+	s := client.ChatCompletion("GLM-4-AllTools")
+	s.AddMessage(ChatCompletionMultiMessage{
+		Role: "user",
+		Content: []ChatCompletionMultiContent{
+			{
+				Type: "text",
+				Text: "搜索下本周深圳天气如何",
+			},
+		},
+	})
+	s.AddTool(ChatCompletionToolWebBrowser{})
+
+	foundInput := false
+	foundOutput := false
+	outputContent := ""
+
+	s.SetStreamHandler(func(chunk ChatCompletionResponse) error {
+		for _, c := range chunk.Choices {
+			for _, tc := range c.Delta.ToolCalls {
+				if tc.Type == ToolTypeWebBrowser && tc.WebBrowser != nil {
+					if tc.WebBrowser.Input != "" {
+						foundInput = true
+					}
+					if len(tc.WebBrowser.Outputs) > 0 {
+						foundOutput = true
+					}
+					for _, output := range tc.WebBrowser.Outputs {
+						if output.Content != "" {
+							outputContent = output.Content
+						}
+					}
+				}
+			}
+		}
+		buf, _ := json.MarshalIndent(chunk, "", "  ")
+		t.Log(string(buf))
+		return nil
+	})
+
+	res, err := s.Do(context.Background())
+	require.True(t, foundInput)
+	require.True(t, foundOutput)
+	require.NotEmpty(t, outputContent)
+	t.Log(outputContent)
+	require.NotNil(t, res)
+	require.NoError(t, err)
 }
 
 func TestChatCompletionServiceStream(t *testing.T) {

@@ -64,6 +64,99 @@ if err != nil {
 }
 ```
 
+**ChatCompletion (Stream with GLM-4-AllTools)**
+
+```go
+// CodeInterpreter
+s := client.ChatCompletion("GLM-4-AllTools")
+s.AddMessage(zhipu.ChatCompletionMultiMessage{
+    Role: "user",
+    Content: []zhipu.ChatCompletionMultiContent{
+        {
+            Type: "text",
+            Text: "计算[5,10,20,700,99,310,978,100]的平均值和方差。",
+        },
+    },
+})
+s.AddTool(zhipu.ChatCompletionToolCodeInterpreter{
+    Sandbox: zhipu.Ptr(CodeInterpreterSandboxAuto),
+})
+s.SetStreamHandler(func(chunk zhipu.ChatCompletionResponse) error {
+    for _, c := range chunk.Choices {
+        for _, tc := range c.Delta.ToolCalls {
+            if tc.Type == ToolTypeCodeInterpreter && tc.CodeInterpreter != nil {
+                if tc.CodeInterpreter.Input != "" {
+                    // DO SOMETHING
+                }
+                if len(tc.CodeInterpreter.Outputs) > 0 {
+                    // DO SOMETHING
+                }
+            }
+        }
+    }
+    return nil
+})
+
+// WebBrowser
+// CAUTION: NOT 'WebSearch'
+s := client.ChatCompletion("GLM-4-AllTools")
+s.AddMessage(zhipu.ChatCompletionMultiMessage{
+    Role: "user",
+    Content: []zhipu.ChatCompletionMultiContent{
+        {
+            Type: "text",
+            Text: "搜索下本周深圳天气如何",
+        },
+    },
+})
+s.AddTool(zhipu.ChatCompletionToolWebBrowser{})
+s.SetStreamHandler(func(chunk zhipu.ChatCompletionResponse) error {
+    for _, c := range chunk.Choices {
+        for _, tc := range c.Delta.ToolCalls {
+            if tc.Type == ToolTypeWebBrowser && tc.WebBrowser != nil {
+                if tc.WebBrowser.Input != "" {
+                    // DO SOMETHING
+                }
+                if len(tc.WebBrowser.Outputs) > 0 {
+                    // DO SOMETHING
+                }
+            }
+        }
+    }
+    return nil
+})
+s.Do(context.Background())
+
+// DrawingTool
+s := client.ChatCompletion("GLM-4-AllTools")
+s.AddMessage(zhipu.ChatCompletionMultiMessage{
+    Role: "user",
+    Content: []zhipu.ChatCompletionMultiContent{
+        {
+            Type: "text",
+            Text: "画一个正弦函数图像",
+        },
+    },
+})
+s.AddTool(zhipu.ChatCompletionToolDrawingTool{})
+s.SetStreamHandler(func(chunk zhipu.ChatCompletionResponse) error {
+    for _, c := range chunk.Choices {
+        for _, tc := range c.Delta.ToolCalls {
+            if tc.Type == ToolTypeDrawingTool && tc.DrawingTool != nil {
+                if tc.DrawingTool.Input != "" {
+                    // DO SOMETHING
+                }
+                if len(tc.DrawingTool.Outputs) > 0 {
+                    // DO SOMETHING
+                }
+            }
+        }
+    }
+    return nil
+})
+s.Do(context.Background())
+```
+
 **Embedding**
 
 ```go
@@ -153,7 +246,7 @@ for {
 
 ## Donation
 
-微信扫码捐赠，感谢您的支持！
+执行单元测试会真实调用GLM接口，消耗我充值的额度，开发不易，请微信扫码捐赠，感谢您的支持！
 
 <img src="./wechat-donation.png" width="180"/>
 

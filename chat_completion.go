@@ -31,6 +31,18 @@ const (
 
 	MultiContentTypeText     = "text"
 	MultiContentTypeImageURL = "image_url"
+
+	// New in GLM-4-AllTools
+	ToolTypeCodeInterpreter = "code_interpreter"
+	ToolTypeDrawingTool     = "drawing_tool"
+	ToolTypeWebBrowser      = "web_browser"
+
+	CodeInterpreterSandboxNone = "none"
+	CodeInterpreterSandboxAuto = "auto"
+
+	ChatCompletionStatusFailed         = "failed"
+	ChatCompletionStatusCompleted      = "completed"
+	ChatCompletionStatusRequiresAction = "requires_action"
 )
 
 // ChatCompletionTool is the interface for chat completion tool
@@ -64,6 +76,29 @@ type ChatCompletionToolWebSearch struct {
 
 func (ChatCompletionToolWebSearch) isChatCompletionTool() {}
 
+// ChatCompletionToolCodeInterpreter is the code interpreter for chat completion
+// only in GLM-4-AllTools
+type ChatCompletionToolCodeInterpreter struct {
+	Sandbox *string `json:"sandbox,omitempty"`
+}
+
+func (ChatCompletionToolCodeInterpreter) isChatCompletionTool() {}
+
+// ChatCompletionToolDrawingTool is the drawing tool for chat completion
+// only in GLM-4-AllTools
+type ChatCompletionToolDrawingTool struct {
+	// no fields
+}
+
+func (ChatCompletionToolDrawingTool) isChatCompletionTool() {}
+
+// ChatCompletionToolWebBrowser is the web browser for chat completion
+type ChatCompletionToolWebBrowser struct {
+	// no fields
+}
+
+func (ChatCompletionToolWebBrowser) isChatCompletionTool() {}
+
 // ChatCompletionUsage is the usage for chat completion
 type ChatCompletionUsage struct {
 	PromptTokens     int64 `json:"prompt_tokens"`
@@ -86,11 +121,51 @@ type ChatCompletionToolCallFunction struct {
 	Arguments json.RawMessage `json:"arguments"`
 }
 
+// ChatCompletionToolCallCodeInterpreterOutput is the output for chat completion tool call code interpreter
+type ChatCompletionToolCallCodeInterpreterOutput struct {
+	Type string `json:"type"`
+	Logs string `json:"logs"`
+	File string `json:"file"`
+}
+
+// ChatCompletionToolCallCodeInterpreter is the code interpreter for chat completion tool call
+type ChatCompletionToolCallCodeInterpreter struct {
+	Input   string                                        `json:"input"`
+	Outputs []ChatCompletionToolCallCodeInterpreterOutput `json:"outputs"`
+}
+
+// ChatCompletionToolCallDrawingToolOutput is the output for chat completion tool call drawing tool
+type ChatCompletionToolCallDrawingToolOutput struct {
+	Image string `json:"image"`
+}
+
+// ChatCompletionToolCallDrawingTool is the drawing tool for chat completion tool call
+type ChatCompletionToolCallDrawingTool struct {
+	Input   string                                    `json:"input"`
+	Outputs []ChatCompletionToolCallDrawingToolOutput `json:"outputs"`
+}
+
+// ChatCompletionToolCallWebBrowserOutput is the output for chat completion tool call web browser
+type ChatCompletionToolCallWebBrowserOutput struct {
+	Title   string `json:"title"`
+	Link    string `json:"link"`
+	Content string `json:"content"`
+}
+
+// ChatCompletionToolCallWebBrowser is the web browser for chat completion tool call
+type ChatCompletionToolCallWebBrowser struct {
+	Input   string                                   `json:"input"`
+	Outputs []ChatCompletionToolCallWebBrowserOutput `json:"outputs"`
+}
+
 // ChatCompletionToolCall is the tool call for chat completion
 type ChatCompletionToolCall struct {
-	ID       string                          `json:"id"`
-	Type     string                          `json:"type"`
-	Function *ChatCompletionToolCallFunction `json:"function,omitempty"`
+	ID              string                                 `json:"id"`
+	Type            string                                 `json:"type"`
+	Function        *ChatCompletionToolCallFunction        `json:"function,omitempty"`
+	CodeInterpreter *ChatCompletionToolCallCodeInterpreter `json:"code_interpreter,omitempty"`
+	DrawingTool     *ChatCompletionToolCallDrawingTool     `json:"drawing_tool,omitempty"`
+	WebBrowser      *ChatCompletionToolCallWebBrowser      `json:"web_browser,omitempty"`
 }
 
 type ChatCompletionMessageType interface {
@@ -145,6 +220,8 @@ type ChatCompletionResponse struct {
 	Choices   []ChatCompletionChoice    `json:"choices"`
 	Usage     ChatCompletionUsage       `json:"usage"`
 	WebSearch []ChatCompletionWebSearch `json:"web_search"`
+	// Status is the status of the chat completion, only in GLM-4-AllTools
+	Status string `json:"status"`
 }
 
 // ChatCompletionStreamHandler is the handler for chat completion stream
@@ -380,6 +457,21 @@ func (s *ChatCompletionService) AddTool(tools ...ChatCompletionTool) *ChatComple
 			s.tools = append(s.tools, map[string]any{
 				"type":            ToolTypeWebSearch,
 				ToolTypeWebSearch: tool,
+			})
+		case ChatCompletionToolCodeInterpreter:
+			s.tools = append(s.tools, map[string]any{
+				"type":                  ToolTypeCodeInterpreter,
+				ToolTypeCodeInterpreter: tool,
+			})
+		case ChatCompletionToolDrawingTool:
+			s.tools = append(s.tools, map[string]any{
+				"type":              ToolTypeDrawingTool,
+				ToolTypeDrawingTool: tool,
+			})
+		case ChatCompletionToolWebBrowser:
+			s.tools = append(s.tools, map[string]any{
+				"type":             ToolTypeWebBrowser,
+				ToolTypeWebBrowser: tool,
 			})
 		}
 	}
