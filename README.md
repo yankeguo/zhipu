@@ -3,6 +3,8 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/yankeguo/zhipu.svg)](https://pkg.go.dev/github.com/yankeguo/zhipu)
 [![go](https://github.com/yankeguo/zhipu/actions/workflows/go.yml/badge.svg)](https://github.com/yankeguo/zhipu/actions/workflows/go.yml)
 
+[中文文档](README.zh.md)
+
 A 3rd-Party Golang Client Library for Zhipu AI Platform
 
 ## Usage
