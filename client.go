@@ -279,3 +279,13 @@ func (c *Client) KnowledgeDelete(knowledgeID string) *KnowledgeDeleteService {
 func (c *Client) KnowledgeCapacity() *KnowledgeCapacityService {
 	return NewKnowledgeCapacityService(c)
 }
+
+// VideoGeneration creates a new video generation service
+func (c *Client) VideoGeneration(model string) *VideoGenerationService {
+	return NewVideoGenerationService(c).SetModel(model)
+}
+
+// AsyncResult creates a new async result get service
+func (c *Client) AsyncResult(id string) *AsyncResultService {
+	return NewAsyncResultService(c).SetID(id)
+}

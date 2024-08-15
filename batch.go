@@ -12,6 +12,7 @@ const (
 	BatchEndpointV4ChatCompletions   = "/v4/chat/completions"
 	BatchEndpointV4ImagesGenerations = "/v4/images/generations"
 	BatchEndpointV4Embeddings        = "/v4/embeddings"
+	BatchEndpointV4VideosGenerations = "/v4/videos/generations"
 
 	BatchCompletionWindow24h = "24h"
 )

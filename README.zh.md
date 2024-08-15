@@ -3,28 +3,28 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/yankeguo/zhipu.svg)](https://pkg.go.dev/github.com/yankeguo/zhipu)
 [![go](https://github.com/yankeguo/zhipu/actions/workflows/go.yml/badge.svg)](https://github.com/yankeguo/zhipu/actions/workflows/go.yml)
 
-A 3rd-Party Golang Client Library for Zhipu AI Platform
+Zhipu AI 平台第三方 Golang 客户端库
 
-## Usage
+## 用法
 
-### Install the package
+### 安装库
 
 ```bash
 go get -u github.com/yankeguo/zhipu
 ```
 
-### Create a client
+### 创建客户端
 
 ```go
-// this will use environment variables ZHIPUAI_API_KEY
+// 默认使用环境变量 ZHIPUAI_API_KEY
 client, err := zhipu.NewClient()
-// or you can specify the API key
+// 或者手动指定密钥
 client, err = zhipu.NewClient(zhipu.WithAPIKey("your api key"))
 ```
 
-### Use the client
+### 使用客户端
 
-**ChatCompletion**
+**ChatCompletion(大语言模型)**
 
 ```go
 service := client.ChatCompletion("glm-4-flash").
@@ -42,7 +42,7 @@ if err != nil {
 }
 ```
 
-**ChatCompletion (Stream)**
+**ChatCompletion(流式调用大语言模型)**
 
 ```go
 service := client.ChatCompletion("glm-4-flash").
@@ -64,7 +64,7 @@ if err != nil {
 }
 ```
 
-**ChatCompletion (Stream with GLM-4-AllTools)**
+**ChatCompletion(流式调用大语言工具模型GLM-4-AllTools)**
 
 ```go
 // CodeInterpreter
@@ -164,14 +164,14 @@ service := client.Embedding("embedding-v2").SetInput("你好呀")
 service.Do(context.Background())
 ```
 
-**Image Generation**
+**ImageGeneration(图像生成)**
 
 ```go
 service := client.ImageGeneration("cogview-3").SetPrompt("一只可爱的小猫咪")
 service.Do(context.Background())
 ```
 
-**Video Generation**
+**VideoGeneration(视频生成)**
 
 ```go
 service := client.VideoGeneration("cogvideox").SetPrompt("一只可爱的小猫咪")
@@ -194,7 +194,7 @@ for {
 }
 ```
 
-**Upload File (Retrieval)**
+**UploadFile(上传文件用于取回)**
 
 ```go
 service := client.FileCreate(zhipu.FilePurposeRetrieval)
@@ -204,7 +204,7 @@ service.SetKnowledgeID("your-knowledge-id")
 service.Do(context.Background())
 ```
 
-**Upload File (Fine-Tune)**
+**UploadFile(上传文件用于微调)**
 
 ```go
 service := client.FileCreate(zhipu.FilePurposeFineTune)
@@ -212,7 +212,7 @@ service.SetLocalFile(filepath.Join("testdata", "test-file.jsonl"))
 service.Do(context.Background())
 ```
 
-**Batch Create**
+**BatchCreate(创建批量任务)**
 
 ```go
 service := client.BatchCreate().
@@ -222,22 +222,22 @@ service := client.BatchCreate().
 service.Do(context.Background())
 ```
 
-**Knowledge Base**
+**KnowledgeBase(知识库)**
 
 ```go
 client.KnowledgeCreate("")
 client.KnowledgeEdit("")
 ```
 
-**Fine Tune**
+**FineTune(微调)**
 
 ```go
 client.FineTuneCreate("")
 ```
 
-### Batch Support
+### 批量任务辅助工具
 
-**Batch File Writer**
+**批量任务文件创建**
 
 ```go
 f, err := os.OpenFile("batch.jsonl", os.O_CREATE|os.O_WRONLY, 0644)
@@ -253,7 +253,7 @@ bw.Add("action_2", client.Embedding("embedding-v2").SetInput("你好呀"))
 bw.Add("action_3", client.ImageGeneration("cogview-3").SetPrompt("一只可爱的小猫咪"))
 ```
 
-**Batch Result Reader**
+**批量任务结果解析**
 
 ```go
 br := zhipu.NewBatchResultReader[zhipu.ChatCompletionResponse](r)
@@ -267,12 +267,12 @@ for {
 }
 ```
 
-## Donation
+## 赞助
 
 执行单元测试会真实调用GLM接口，消耗我充值的额度，开发不易，请微信扫码捐赠，感谢您的支持！
 
 <img src="./wechat-donation.png" width="180"/>
 
-## Credits
+## 许可证
 
 GUO YANKE, MIT License
