@@ -45,7 +45,7 @@ func TestChatCompletionServiceCharGLM(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, res.Choices)
 	choice := res.Choices[0]
-	require.Equal(t, FinishReasonStop, choice.FinishReason)
+	require.Contains(t, []string{FinishReasonStop, FinishReasonStopSequence}, choice.FinishReason)
 	require.NotEmpty(t, choice.Message.Content)
 }
 

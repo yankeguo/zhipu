@@ -20,6 +20,7 @@ const (
 	ToolChoiceAuto = "auto"
 
 	FinishReasonStop         = "stop"
+	FinishReasonStopSequence = "stop_sequence"
 	FinishReasonToolCalls    = "tool_calls"
 	FinishReasonLength       = "length"
 	FinishReasonSensitive    = "sensitive"
