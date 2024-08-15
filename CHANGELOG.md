@@ -2,6 +2,18 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.1.2 - 2024-08-15
+#### Bug Fixes
+- add FinishReasonStopSequence - (01b4201) - GUO YANKE
+#### Documentation
+- update README.md [skip ci] - (e48a88b) - GUO YANKE
+#### Features
+- add videos/generations - (7261999) - GUO YANKE
+#### Miscellaneous Chores
+- relaxing go version to 1.18 - (6acc17c) - GUO YANKE
+
+- - -
+
 ## v0.1.1 - 2024-07-17
 #### Documentation
 - update README.md [skip ci] - (695432a) - GUO YANKE
