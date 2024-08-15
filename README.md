@@ -269,7 +269,7 @@ for {
 
 ## Donation
 
-执行单元测试会真实调用GLM接口，消耗我充值的额度，开发不易，请微信扫码捐赠，感谢您的支持！
+Executing unit tests will actually call the ChatGLM API and consume my quota. Please donate and thank you for your support!
 
 <img src="./wechat-donation.png" width="180"/>
 
