@@ -2,6 +2,7 @@
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/yankeguo/zhipu.svg)](https://pkg.go.dev/github.com/yankeguo/zhipu)
 [![go](https://github.com/yankeguo/zhipu/actions/workflows/go.yml/badge.svg)](https://github.com/yankeguo/zhipu/actions/workflows/go.yml)
+[![codecov](https://codecov.io/gh/yankeguo/zhipu/graph/badge.svg?token=O08DOWX2TU)](https://codecov.io/gh/yankeguo/zhipu)
 
 Zhipu AI 平台第三方 Golang 客户端库
 
