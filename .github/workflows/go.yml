@@ -21,7 +21,12 @@ jobs:
         run: go build -v ./...
 
       - name: Test
-        run: go test -v ./...
+        run: go test -coverprofile=coverage.txt -v ./...
         env:
           ZHIPUAI_API_KEY: ${{secrets.ZHIPUAI_API_KEY}}
           TEST_KNOWLEDGE_ID: ${{secrets.TEST_KNOWLEDGE_ID}}
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
