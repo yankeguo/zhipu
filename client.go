@@ -32,6 +32,7 @@ type clientOptions struct {
 	baseURL string
 	apiKey  string
 	client  *http.Client
+	resty   *resty.Client
 	debug   *bool
 }
 
@@ -49,6 +50,13 @@ func WithAPIKey(apiKey string) ClientOption {
 func WithBaseURL(baseURL string) ClientOption {
 	return func(opts *clientOptions) {
 		opts.baseURL = baseURL
+	}
+}
+
+// WithRestyClient set the resty client of the client
+func WithRestyClient(client *resty.Client) ClientOption {
+	return func(opts *clientOptions) {
+		opts.resty = client
 	}
 }
 
@@ -145,10 +153,12 @@ func NewClient(optFns ...ClientOption) (client *Client, err error) {
 		keySecret: []byte(keyComponents[1]),
 	}
 
-	if opts.client == nil {
-		client.client = resty.New()
-	} else {
+	if opts.resty != nil {
+		client.client = opts.resty
+	} else if opts.client != nil {
 		client.client = resty.NewWithClient(opts.client)
+	} else {
+		client.client = resty.New()
 	}
 
 	client.client = client.client.SetBaseURL(opts.baseURL)
