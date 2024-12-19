@@ -2,6 +2,19 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.1.3 - 2024-12-19
+#### Documentation
+- update README.md [skip ci] - (baa4eb7) - GUO YANKE
+- update README.md [skip ci] - (692d45f) - GUO YANKE
+#### Features
+- add WithRestyClient - (e508e3e) - GUO YANKE
+#### Tests
+- adjust github workflows, only allow manual trigger - (241249c) - GUO YANKE
+- adjust github workflows, disabling pull_request - (d72c960) - GUO YANKE
+- add codecov support - (da86056) - GUO YANKE
+
+- - -
+
 ## v0.1.2 - 2024-08-15
 #### Bug Fixes
 - add FinishReasonStopSequence - (01b4201) - GUO YANKE
