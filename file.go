@@ -394,8 +394,8 @@ func (s *FileListService) Do(ctx context.Context) (res FileListResponse, err err
 
 // FileDeleteService is a service to delete a file.
 type FileDeleteService struct {
-	client     *Client
-	documentID string
+	client *Client
+	fileID string
 }
 
 // NewFileDeleteService creates a new FileDeleteService.
@@ -403,9 +403,15 @@ func NewFileDeleteService(client *Client) *FileDeleteService {
 	return &FileDeleteService{client: client}
 }
 
-// SetDocumentID sets the document_id parameter of the FileDeleteService.
+// Deprecated: use SetFileID instead.
 func (s *FileDeleteService) SetDocumentID(documentID string) *FileDeleteService {
-	s.documentID = documentID
+	s.fileID = documentID
+	return s
+}
+
+// SetFileID sets the file_id parameter of the FileDeleteService.
+func (s *FileDeleteService) SetFileID(fileID string) *FileDeleteService {
+	s.fileID = fileID
 	return s
 }
 
@@ -417,9 +423,9 @@ func (s *FileDeleteService) Do(ctx context.Context) (err error) {
 	)
 
 	if resp, err = s.client.request(ctx).
-		SetPathParam("document_id", s.documentID).
+		SetPathParam("file_id", s.fileID).
 		SetError(&apiError).
-		Delete("document/{document_id}"); err != nil {
+		Delete("files/{file_id}"); err != nil {
 		return
 	}
 

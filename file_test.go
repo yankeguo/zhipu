@@ -69,3 +69,16 @@ func TestFileListServiceFineTune(t *testing.T) {
 	require.NoError(t, err)
 	require.NotEmpty(t, res.Data)
 }
+
+func TestFileDeleteService(t *testing.T) {
+	client, err := NewClient()
+	require.NoError(t, err)
+
+	s := client.FileCreate(FilePurposeFineTune)
+	s.SetLocalFile(filepath.Join("testdata", "test-file.jsonl"))
+	res, err := s.Do(context.Background())
+	require.NoError(t, err)
+
+	err = client.FileDelete(res.ID).Do(context.Background())
+	require.NoError(t, err)
+}

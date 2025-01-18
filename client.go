@@ -216,8 +216,8 @@ func (c *Client) FileList(purpose string) *FileListService {
 }
 
 // FileDeleteService creates a new FileDeleteService.
-func (c *Client) FileDelete(documentID string) *FileDeleteService {
-	return NewFileDeleteService(c).SetDocumentID(documentID)
+func (c *Client) FileDelete(fileID string) *FileDeleteService {
+	return NewFileDeleteService(c).SetFileID(fileID)
 }
 
 // FileGetService creates a new FileGetService.
