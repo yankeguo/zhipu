@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.1.4 - 2025-01-18
+#### Bug Fixes
+- **(delete)** correct file deletion api, fix #1 - (ee6f9bd) - GUO YANKE
+
+- - -
+
 ## v0.1.3 - 2024-12-19
 #### Documentation
 - update README.md [skip ci] - (baa4eb7) - GUO YANKE
