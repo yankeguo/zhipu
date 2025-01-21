@@ -2,6 +2,12 @@
 All notable changes to this project will be documented in this file. See [conventional commits](https://www.conventionalcommits.org/) for commit guidelines.
 
 - - -
+## v0.1.5 - 2025-01-21
+#### Features
+- add support for response_format, close #2 - (c2396f6) - GUO YANKE
+
+- - -
+
 ## v0.1.4 - 2025-01-18
 #### Bug Fixes
 - **(delete)** correct file deletion api, fix #1 - (ee6f9bd) - GUO YANKE
