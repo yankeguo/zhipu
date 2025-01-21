@@ -44,6 +44,10 @@ const (
 	ChatCompletionStatusFailed         = "failed"
 	ChatCompletionStatusCompleted      = "completed"
 	ChatCompletionStatusRequiresAction = "requires_action"
+
+	// ResponseFormat
+	ResponseFormatText       = "text"
+	ResponseFormatJSONObject = "json_object"
 )
 
 // ChatCompletionTool is the interface for chat completion tool
@@ -335,6 +339,7 @@ type ChatCompletionService struct {
 	toolChoice  *string
 	userID      *string
 	meta        *ChatCompletionMeta
+	resFormat   *string
 
 	messages []any
 	tools    []any
@@ -422,6 +427,11 @@ func (s *ChatCompletionService) SetToolChoice(toolChoice string) *ChatCompletion
 // SetUserID set the user id of the chat completion, optional
 func (s *ChatCompletionService) SetUserID(userID string) *ChatCompletionService {
 	s.userID = &userID
+	return s
+}
+
+func (s *ChatCompletionService) SetResponseFormat(format string) *ChatCompletionService {
+	s.resFormat = &format
 	return s
 }
 
@@ -513,6 +523,9 @@ func (s *ChatCompletionService) buildBody() M {
 	}
 	if s.meta != nil {
 		body["meta"] = s.meta
+	}
+	if s.resFormat != nil {
+		body["response_format"] = M{"type": *s.resFormat}
 	}
 	return body
 }
