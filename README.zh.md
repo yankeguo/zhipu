@@ -276,10 +276,6 @@ for {
 
 <img src="./wechat-donation.png" width="180"/>
 
-想要快速体验 ChatGLM 模型，可以关注"织慧软件"公众号在聊天框直接开始对话。
-
-<img src="./wechat-platform.svg" height="120" />
-
 ## 许可证
 
 GUO YANKE, MIT License

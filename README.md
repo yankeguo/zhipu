@@ -282,12 +282,6 @@ Executing unit tests will actually call the ChatGLM API and consume my quota. Pl
 
 <img src="./wechat-donation.png" width="180"/>
 
-If you want to quickly experience the ChatGLM model, you can follow this wechat public account to start a conversation directly
-
-想要快速体验 ChatGLM 模型，可以关注"织慧软件"公众号在聊天框直接开始对话。
-
-<img src="./wechat-platform.svg" height="120" />
-
 ## Credits
 
 GUO YANKE, MIT License
