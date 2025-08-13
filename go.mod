@@ -1,4 +1,4 @@
-module github.com/yankeguo/zhipu
+module github.com/xjqxz2/zhipu
 
 go 1.18
 
