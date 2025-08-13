@@ -7,6 +7,8 @@
 [中文文档](README.zh.md)
 
 A 3rd-Party Golang Client Library for Zhipu AI Platform
+Wind Changed! Forked to github.com/yankeguo/zhipu .
+
 
 ## Usage
 
@@ -270,18 +272,6 @@ for {
 }
 ```
 
-## Donation
+### Thanks ###
+Author: github.com/yankeguo/zhipu
 
-**This project is a personal open-source project maintained by GUO YANKE. The following donation channels are not related to Zhipu AI.**
-
-**本项目是个人维护的开源项目，以下赞助渠道与智谱AI官方无关。**
-
-Executing unit tests will actually call the ChatGLM API and consume my quota. Please donate and thank you for your support!
-
-执行单元测试会真实调用GLM接口，消耗我充值的额度，开发不易，请微信扫码捐赠，感谢您的支持！
-
-<img src="./wechat-donation.png" width="180"/>
-
-## Credits
-
-GUO YANKE, MIT License

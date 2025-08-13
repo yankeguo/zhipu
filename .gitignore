@@ -23,3 +23,6 @@ go.work.sum
 
 # Env
 /.env
+
+# Idea/Goland
+.idea
