@@ -276,11 +276,6 @@ for {
 
 **本项目是个人维护的开源项目，以下赞助渠道与智谱AI官方无关。**
 
-Executing unit tests will actually call the ChatGLM API and consume my quota. Please donate and thank you for your support!
-
-执行单元测试会真实调用GLM接口，消耗我充值的额度，开发不易，请微信扫码捐赠，感谢您的支持！
-
-<img src="./wechat-donation.png" width="180"/>
 
 ## Credits
 
