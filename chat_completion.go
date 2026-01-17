@@ -48,6 +48,13 @@ const (
 	// ResponseFormat
 	ResponseFormatText       = "text"
 	ResponseFormatJSONObject = "json_object"
+
+	// Thinking Mode
+	ThinkingDisabled = "disabled"
+	ThinkingEnabled  = "enabled"
+
+	// Sensitive Word Check
+	SensitiveWordCheckDisable = "DISABLE"
 )
 
 // ChatCompletionTool is the interface for chat completion tool
@@ -201,6 +208,15 @@ type ChatCompletionMultiMessage struct {
 
 func (ChatCompletionMultiMessage) isChatCompletionMessageType() {}
 
+// ChatCompletionThinking Begin GLM4.5 is force thinking，use it can close it
+type ChatCompletionThinking struct {
+	Type string `json:"type"`
+}
+
+type ChatCompletionSensitiveWordCheck struct {
+	Status string `json:"status"`
+}
+
 // ChatCompletionMeta is the meta for chat completion
 type ChatCompletionMeta struct {
 	UserInfo string `json:"user_info"`
@@ -340,6 +356,8 @@ type ChatCompletionService struct {
 	userID      *string
 	meta        *ChatCompletionMeta
 	resFormat   *string
+	thinking    *ChatCompletionThinking
+	sensitiveWordCheck *ChatCompletionSensitiveWordCheck
 
 	messages []any
 	tools    []any
@@ -391,6 +409,18 @@ func (s *ChatCompletionService) SetRequestID(requestID string) *ChatCompletionSe
 // SetTemperature set the temperature of the chat completion, optional
 func (s *ChatCompletionService) SetDoSample(doSample bool) *ChatCompletionService {
 	s.doSample = &doSample
+	return s
+}
+
+// SetThinkingMode set the thinking mode ,default = enabled
+func (s *ChatCompletionService) SetThinkingMode(thinkingMode string) *ChatCompletionService {
+	s.thinking = &ChatCompletionThinking{Type: thinkingMode}
+	return s
+}
+
+// SetSensitiveWordCheck set the sensitive word check, optional
+func (s *ChatCompletionService) SetSensitiveWordCheck(sensitiveWordCheck string) *ChatCompletionService {
+	s.sensitiveWordCheck = &ChatCompletionSensitiveWordCheck{Status: sensitiveWordCheck}
 	return s
 }
 
@@ -526,6 +556,12 @@ func (s *ChatCompletionService) buildBody() M {
 	}
 	if s.resFormat != nil {
 		body["response_format"] = M{"type": *s.resFormat}
+	}
+	if s.thinking != nil {
+		body["thinking"] = *s.thinking
+	}
+	if s.sensitiveWordCheck != nil {
+		body["sensitive_word_check"] = *s.sensitiveWordCheck
 	}
 	return body
 }
