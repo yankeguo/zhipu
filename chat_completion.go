@@ -345,18 +345,18 @@ func chatCompletionDecodeStream(r io.Reader, fn func(chunk ChatCompletionRespons
 type ChatCompletionService struct {
 	client *Client
 
-	model       string
-	requestID   *string
-	doSample    *bool
-	temperature *float64
-	topP        *float64
-	maxTokens   *int
-	stop        []string
-	toolChoice  *string
-	userID      *string
-	meta        *ChatCompletionMeta
-	resFormat   *string
-	thinking    *ChatCompletionThinking
+	model              string
+	requestID          *string
+	doSample           *bool
+	temperature        *float64
+	topP               *float64
+	maxTokens          *int
+	stop               []string
+	toolChoice         *string
+	userID             *string
+	meta               *ChatCompletionMeta
+	resFormat          *string
+	thinking           *ChatCompletionThinking
 	sensitiveWordCheck *ChatCompletionSensitiveWordCheck
 
 	messages []any
